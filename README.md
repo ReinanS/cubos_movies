@@ -1,4 +1,8 @@
+
 # Desafio Técnico Flutter
+
+## Desafio Incompleto em 15/11/2021
+
 Vamos construir um app para buscar filmes?
 
 Para realizar esse desafio você vai precisar:
@@ -18,7 +22,6 @@ Deve ser possível filtrar os filmes por:
 
 - Nome (Campo de Texto)
 - Gênero do filme, separado em quatro tabs.
-
 
 # Critérios que serão avaliados
 
@@ -44,4 +47,11 @@ O único critério **obrigátorio** para a entrega é o correto funcionamento do
 - [] Detalhar Filme
 - [] Buscar pelo nome do Filme
 
-### Desafio Incompleto em 15/11/2021
+## Pontos a serem estudaos ou reforçados posteriormente:
+
+- Gerenciamento de Estado
+- Escolha da arquitetura apropriada
+- Uso do app Offline (cache)
+- Animações
+- Flutter Layout
+
