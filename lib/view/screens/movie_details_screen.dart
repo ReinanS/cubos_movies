@@ -1,7 +1,6 @@
 import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/model/movie_details.dart';
 import 'package:cubos_movies/view/utils/utils.dart';
-import 'package:cubos_movies/view/widgets/custom_silver_delegate.dart';
 import 'package:cubos_movies/view_model/movie_view_model.dart';
 import 'package:flutter/material.dart';
 

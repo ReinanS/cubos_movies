@@ -2,7 +2,7 @@ import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/model/genre.dart';
 import 'package:cubos_movies/model/movie.dart';
 import 'package:cubos_movies/view/utils/utils.dart';
-import 'package:cubos_movies/view/widgets/movie_genre_list.dart';
+import 'package:cubos_movies/view/widgets/genres_tab_widget.dart';
 import 'package:cubos_movies/view/widgets/search_bar_widget.dart';
 import 'package:cubos_movies/view_model/movie_view_model.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return Center(child: CircularProgressIndicator());
 
       case Status.COMPLETED:
-        return MovieGenreList(
+        return GenresTabWidget(
           genres: genreList!,
         );
 
