@@ -1,16 +1,47 @@
-# cubos_movies
+# Desafio Técnico Flutter
+Vamos construir um app para buscar filmes?
 
-A new Flutter project.
+Para realizar esse desafio você vai precisar:
 
-## Getting Started
+- Consumir os dados da API The Movie DB (https://developers.themoviedb.org/3/getting-started/introduction);
+- Desenvolver a aplicação em Flutter
+- Utilizar o padrão de arquitetura que preferir (MVP, MVP, MVVM, Bloc, MobX, etc)
+- Disponibilizar o código num repositório (Github, Gitlab, Bitbucket...) e nos enviar o link.
 
-This project is a starting point for a Flutter application.
+# Descrição do aplicativo
 
-A few resources to get you started if this is your first Flutter project:
+O aplicativo deverá seguir o layout do figma no link : https://www.figma.com/file/p2vU5rmkSnulbxEqHjk5ah/Desafio-Flutter-Cubos?node-id=0%3A1. Caso tenha problema de acesso, entra em contato conosco.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Será composto por duas telas: uma de listagem dos filmes e outra de detalhes do filme. 
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Deve ser possível filtrar os filmes por:
+
+- Nome (Campo de Texto)
+- Gênero do filme, separado em quatro tabs.
+
+
+# Critérios que serão avaliados
+
+O único critério **obrigátorio** para a entrega é o correto funcionamento do app de acordo com a **descrição**, mas lembre que você será avaliado. Segue alguns pontos de atenção:
+
+- Arquitetura Utilizada
+- Legibilidade do código
+- Gerenciamento de Estado
+- Injeção de dependência
+- Testes
+- Otimização
+- Uso do app Offline (cache)
+- Animações
+- GIT (padrões de commits , branchs)
+- Fidelidade do layout em relação ao Figma.
+
+## TO-DO list
+
+- [x] Arquitetura MVVM
+- [x] Consumir os dados da API The Movie DB (https://developers.themoviedb.org/3/getting-started/introduction);
+- [x] HomeScreen
+- [] Gênero do filme, separado em quatro tabs - Erro relacionado a gerenciamento de estado ao alternar entre as abas
+- [] Detalhar Filme
+- [] Buscar pelo nome do Filme
+
+### Desafio Incompleto em 15/11/2021
