@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   init() async {
-    await viewModel.fetchGenresList();
+    viewModel.fetchGenresList();
     viewModel.apiResponse.addListener(() {
       setState(() {});
     });

@@ -23,7 +23,7 @@ class _GenreMoviesState extends State<GenreMovies> {
   }
 
   Future<void> init() async {
-    await viewModel.fetchMoviesByGenre(widget.genreId);
+    viewModel.fetchMoviesByGenre(widget.genreId);
     viewModel.apiResponse.addListener(() {
       setState(() {});
     });
@@ -31,6 +31,8 @@ class _GenreMoviesState extends State<GenreMovies> {
 
   @override
   Widget build(BuildContext context) {
+    // return Text(widget.genreId.toString());
+
     ApiResponse apiResponse = viewModel.response;
 
     switch (apiResponse.status) {
@@ -64,12 +66,17 @@ class _GenreMoviesState extends State<GenreMovies> {
       );
     }
 
-    return ListView.builder(itemBuilder: (BuildContext context, int index) {
-      // return Text(movieList[index].title);
-      return MovieCardWidget(
-        movie: movieList[index],
-        movieGenres: viewModel.movieGenderPoster(movieList[index]),
-      );
-    });
+    return SingleChildScrollView(
+      child: Column(
+          children: movieList.map((movie) {
+        return MovieCardWidget(
+          movie: movie,
+          // movieGenres: viewModel.movieGenderPoster(movie),
+        );
+        // return Text(movie.title);
+      }).toList()),
+    );
+
+    // });
   }
 }
