@@ -34,23 +34,18 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
 
   @override
   Widget build(BuildContext context) {
-    final List<String> _tabItens = [
-      widget.genres[0].name,
-      widget.genres[1].name,
-      widget.genres[8].name,
-      widget.genres[3].name,
+    List<Genre> _tabGenres = [
+      widget.genres.firstWhere((g) => g.name.toLowerCase() == 'ação'),
+      widget.genres.firstWhere((g) => g.name.toLowerCase() == 'aventura'),
+      widget.genres.firstWhere((g) => g.name.toLowerCase() == 'fantasia'),
+      widget.genres.firstWhere((g) => g.name.toLowerCase() == 'comédia'),
     ];
 
-    final action = widget.genres.firstWhere((g) => g.id == 28);
-    final adventure = widget.genres.firstWhere((g) => g.id == 12);
-    final fantasy = widget.genres.firstWhere((g) => g.id == 35);
-    final comedy = widget.genres.firstWhere((g) => g.id == 14);
-
-    final tabBarviews = [
-      action.id,
-      adventure.id,
-      fantasy.id,
-      comedy.id,
+    final List<String> _tabItens = [
+      _tabGenres[0].name,
+      _tabGenres[1].name,
+      _tabGenres[2].name,
+      _tabGenres[3].name,
     ];
 
     return Container(
@@ -71,9 +66,9 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
             child: TabBarView(
               controller: _tabController,
               physics: NeverScrollableScrollPhysics(),
-              children: tabBarviews
-                  .map((id) => GenreMovies(
-                        genreId: id,
+              children: _tabGenres
+                  .map((genre) => GenreMovies(
+                        genreId: genre.id,
                       ))
                   .toList(),
             ),
