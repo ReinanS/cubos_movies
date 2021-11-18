@@ -43,9 +43,9 @@ O único critério **obrigátorio** para a entrega é o correto funcionamento do
 - [x] Arquitetura MVVM
 - [x] Consumir os dados da API The Movie DB (https://developers.themoviedb.org/3/getting-started/introduction);
 - [x] HomeScreen
-- [] Gênero do filme, separado em quatro tabs - Erro relacionado a gerenciamento de estado ao alternar entre as abas
-- [] Detalhar Filme
-- [] Buscar pelo nome do Filme
+- [ ] Gênero do filme, separado em quatro tabs - Erro relacionado a gerenciamento de estado ao alternar entre as abas
+- [ ] Detalhar Filme
+- [ ] Buscar pelo nome do Filme
 
 ## Pontos a serem estudaos ou reforçados posteriormente:
 
