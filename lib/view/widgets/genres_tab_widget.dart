@@ -1,12 +1,17 @@
-import 'package:cubos_movies/model/genre.dart';
+import 'package:cubos_movies/model/movie_genre.dart';
+import 'package:cubos_movies/model/movie.dart';
 import 'package:cubos_movies/view/widgets/genre_movies.dart';
 import 'package:cubos_movies/view/widgets/tab_bar_widget.dart';
 import 'package:flutter/material.dart';
 
 class GenresTabWidget extends StatefulWidget {
-  final List<Genre> genres;
+  final List<Movie> movies;
+  final List<MovieGenre> genres;
 
-  GenresTabWidget({required this.genres});
+  GenresTabWidget({
+    required this.movies,
+    required this.genres,
+  });
 
   @override
   _GenresTabWidgetState createState() => _GenresTabWidgetState();
@@ -34,7 +39,7 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
 
   @override
   Widget build(BuildContext context) {
-    List<Genre> _tabGenres = [
+    List<MovieGenre> _tabGenres = [
       widget.genres.firstWhere((g) => g.name.toLowerCase() == 'ação'),
       widget.genres.firstWhere((g) => g.name.toLowerCase() == 'aventura'),
       widget.genres.firstWhere((g) => g.name.toLowerCase() == 'fantasia'),
@@ -69,6 +74,8 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
               children: _tabGenres
                   .map((genre) => GenreMovies(
                         genreId: genre.id,
+                        movies: widget.movies,
+                        genres: widget.genres,
                       ))
                   .toList(),
             ),

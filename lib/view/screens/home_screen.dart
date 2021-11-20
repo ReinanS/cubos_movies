@@ -1,6 +1,8 @@
+import 'dart:developer';
+
 import 'package:cubos_movies/model/apis/api_response.dart';
-import 'package:cubos_movies/model/genre.dart';
 import 'package:cubos_movies/model/movie.dart';
+import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/view/utils/utils.dart';
 import 'package:cubos_movies/view/widgets/genres_tab_widget.dart';
 import 'package:cubos_movies/view/widgets/search_bar_widget.dart';
@@ -13,9 +15,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<List<Movie>?> movies;
+  final MovieViewModel movieViewModel = MovieViewModel();
+  final MovieViewModel genreViewModel = MovieViewModel();
 
-  final MovieViewModel viewModel = MovieViewModel();
   final TextEditingController controller = TextEditingController();
 
   @override
@@ -25,15 +27,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   init() async {
-    viewModel.fetchGenresList();
-    viewModel.apiResponse.addListener(() {
+    movieViewModel.fetchMovieData();
+    movieViewModel.apiResponse.addListener(() {
+      setState(() {});
+    });
+
+    genreViewModel.fetchGenresList();
+    genreViewModel.apiResponse.addListener(() {
       setState(() {});
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    ApiResponse apiResponse = viewModel.response;
+    ApiResponse apiMovieResponse = movieViewModel.response;
+    ApiResponse apiGenreResponse = genreViewModel.response;
+
     Size deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -67,31 +76,29 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        body: _getGenres(apiResponse));
+        body: _getGenres(apiMovieResponse, apiGenreResponse));
   }
 
-  Widget _getGenres(ApiResponse apiResponse) {
-    List<Genre>? genreList = apiResponse.data as List<Genre>?;
+  Widget _getGenres(
+      ApiResponse apiMovieResponse, ApiResponse apiGenreResponse) {
+    List<Movie>? movieList = apiMovieResponse.data as List<Movie>?;
+    List<MovieGenre>? genreList = apiGenreResponse.data as List<MovieGenre>?;
 
-    switch (apiResponse.status) {
-      case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
-
-      case Status.COMPLETED:
-        return GenresTabWidget(
-          genres: genreList!,
-        );
-
-      case Status.ERROR:
-        return Center(
-          child: Text('Please try again Later !!'),
-        );
-
-      case Status.INITIAL:
-      default:
-        return Center(
-          child: Text('Search the Genres'),
-        );
+    if ((apiGenreResponse.status == Status.LOADING) ||
+        (apiMovieResponse.status == Status.LOADING)) {
+      return Center(child: CircularProgressIndicator());
     }
+
+    if ((apiGenreResponse.status == Status.COMPLETED) ||
+        (apiMovieResponse.status == Status.COMPLETED)) {
+      return GenresTabWidget(genres: genreList!, movies: movieList!);
+    }
+
+    if ((apiGenreResponse.status == Status.ERROR) ||
+        (apiMovieResponse.status == Status.ERROR)) {
+      return Center(child: Text('Please try again Later !!'));
+    }
+
+    return Center(child: Text('Search the Genres'));
   }
 }
