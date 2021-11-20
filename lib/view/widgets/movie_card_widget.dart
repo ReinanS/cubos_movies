@@ -1,8 +1,6 @@
-import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/view/utils/constansts.dart';
 import 'package:cubos_movies/model/movie.dart';
-import 'package:cubos_movies/view/screens/movie_details_screen.dart';
-import 'package:cubos_movies/view_model/movie_view_model.dart';
+import 'package:cubos_movies/view/screens/movie_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -20,47 +18,12 @@ class MovieCardWidget extends StatefulWidget {
 }
 
 class _MovieCardWidgetState extends State<MovieCardWidget> {
-  MovieViewModel viewModel = MovieViewModel();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  Future<void> init() async {
-    await viewModel.fetchGenresList();
-    viewModel.apiResponse.addListener(() {
-      setState(() {});
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    ApiResponse apiResponse = viewModel.response;
-
-    switch (apiResponse.status) {
-      case Status.LOADING:
-        {
-          return Center(child: CircularProgressIndicator());
-        }
-
-      case Status.COMPLETED:
-        return _buildMovieCard(apiResponse);
-
-      case Status.ERROR:
-        return Center(
-          child: Text('Please try again Later !!'),
-        );
-
-      case Status.INITIAL:
-      default:
-        return Center(
-          child: Text('Search the Movie'),
-        );
-    }
+    return _buildMovieCard();
   }
 
-  Widget _buildMovieCard(ApiResponse apiResponse) {
+  Widget _buildMovieCard() {
     Size deviceSize = MediaQuery.of(context).size;
 
     return GestureDetector(
@@ -69,7 +32,7 @@ class _MovieCardWidgetState extends State<MovieCardWidget> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => MovieDetailsScreen(
+                builder: (context) => MovieDetailScreen(
                       movieId: widget.movie.id,
                     )));
       },
@@ -98,7 +61,7 @@ class _MovieCardWidgetState extends State<MovieCardWidget> {
                     borderRadius: BorderRadius.circular(16),
                     child: FadeInImage.memoryNetwork(
                       placeholder: kTransparentImage,
-                      image: TmdbConstants.imageBase + widget.movie.poster,
+                      image: TmdbConstants.imageBase + widget.movie.posterPath,
                       fit: BoxFit.fill,
                     ),
                   ),
