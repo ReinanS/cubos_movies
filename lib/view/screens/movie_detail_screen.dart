@@ -1,19 +1,19 @@
 import 'package:cubos_movies/model/apis/api_response.dart';
-import 'package:cubos_movies/model/movie_details.dart';
+import 'package:cubos_movies/model/movie_detail.dart';
 import 'package:cubos_movies/view/utils/utils.dart';
 import 'package:cubos_movies/view_model/movie_view_model.dart';
 import 'package:flutter/material.dart';
 
-class MovieDetailsScreen extends StatefulWidget {
+class MovieDetailScreen extends StatefulWidget {
   final int movieId;
 
-  MovieDetailsScreen({required this.movieId});
+  MovieDetailScreen({required this.movieId});
 
   @override
-  _MovieDetailsScreenState createState() => _MovieDetailsScreenState();
+  _MovieDetailScreenState createState() => _MovieDetailScreenState();
 }
 
-class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
+class _MovieDetailScreenState extends State<MovieDetailScreen> {
   final MovieViewModel viewModel = MovieViewModel();
 
   @override
@@ -101,7 +101,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
   }
 
   Widget buildMovieDetail(ApiResponse apiResponse) {
-    MovieDetails? movie = apiResponse.data as MovieDetails?;
-    return Text(movie!.belongsToCollection.name);
+    MovieDetail? movie = apiResponse.data as MovieDetail?;
+    return Text(movie!.title);
   }
 }
