@@ -2,6 +2,7 @@ import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/model/movie_detail.dart';
 import 'package:cubos_movies/model/repository/movie_repository.dart';
 import 'package:cubos_movies/view/utils/utils.dart';
+import 'package:cubos_movies/view_model/details_view_model.dart';
 import 'package:cubos_movies/view_model/movie_view_model.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,8 @@ class MovieDetailScreen extends StatefulWidget {
 }
 
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
-  final MovieViewModel viewModel = MovieViewModel(MovieRepository());
+  final MovieDetailViewModel viewModel =
+      MovieDetailViewModel(MovieRepository());
 
   @override
   void initState() {

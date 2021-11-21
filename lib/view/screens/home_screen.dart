@@ -3,9 +3,11 @@ import 'dart:developer';
 import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/model/movie.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
+import 'package:cubos_movies/model/repository/movie_repository.dart';
 import 'package:cubos_movies/view/utils/utils.dart';
 import 'package:cubos_movies/view/widgets/genres_tab_widget.dart';
 import 'package:cubos_movies/view/widgets/search_bar_widget.dart';
+import 'package:cubos_movies/view_model/genre_view_model.dart';
 import 'package:cubos_movies/view_model/movie_view_model.dart';
 import 'package:flutter/material.dart';
 
@@ -15,10 +17,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final MovieViewModel movieViewModel = MovieViewModel();
-  final MovieViewModel genreViewModel = MovieViewModel();
-
-  final TextEditingController controller = TextEditingController();
+  final MovieViewModel movieViewModel = MovieViewModel(MovieRepository());
+  final GenreViewModel genreViewModel = GenreViewModel(MovieRepository());
 
   @override
   void initState() {
@@ -64,12 +64,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Container(
                   child: SearchBarWidget(
-                    labelText: 'Pesquise filmes',
-                    controller: controller,
-                    icon: Icon(
-                      Icons.search,
-                      color: AppColors.grey,
-                    ),
+                    hintText: 'Pesquise filmes',
+                    onChanged: movieViewModel.onChanged,
                   ),
                 ),
               ),
