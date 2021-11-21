@@ -1,26 +1,34 @@
 import 'package:cubos_movies/view/utils/utils.dart';
 import 'package:flutter/material.dart';
 
-class SearchBarWidget extends StatelessWidget {
-  final TextEditingController controller;
-  final String labelText;
-  final Widget icon;
+class SearchBarWidget extends StatefulWidget {
+  final String hintText;
+  final ValueChanged<String> onChanged;
 
   SearchBarWidget({
-    required this.controller,
-    required this.labelText,
-    required this.icon,
+    required this.hintText,
+    required this.onChanged,
   });
 
   @override
+  _SearchBarWidgetState createState() => _SearchBarWidgetState();
+}
+
+class _SearchBarWidgetState extends State<SearchBarWidget> {
+  final _controller = TextEditingController();
+  @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
+    return TextField(
+      controller: _controller,
+      onChanged: widget.onChanged,
       keyboardType: TextInputType.text,
       style: TextStyle(color: AppColors.grey, fontSize: 16),
       decoration: InputDecoration(
-        labelText: labelText,
-        prefixIcon: icon,
+        labelText: widget.hintText,
+        prefixIcon: Icon(
+          Icons.search,
+          color: AppColors.grey,
+        ),
         labelStyle: TextStyle(color: AppColors.grey, fontSize: 16),
         contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 18),
         fillColor: AppColors.lightGrey,
