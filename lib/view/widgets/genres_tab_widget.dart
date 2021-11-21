@@ -1,6 +1,7 @@
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie.dart';
 import 'package:cubos_movies/view/widgets/genre_movies.dart';
+import 'package:cubos_movies/view/widgets/search_bar_widget.dart';
 import 'package:cubos_movies/view/widgets/tab_bar_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,8 @@ class GenresTabWidget extends StatefulWidget {
 class _GenresTabWidgetState extends State<GenresTabWidget>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  String query = '';
+  late List<Movie> movies;
 
   @override
   void initState() {
@@ -29,6 +32,7 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
       length: 4,
       vsync: this,
     );
+    movies = widget.movies;
   }
 
   @override
@@ -58,7 +62,15 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
       child: Column(
         children: [
           Container(
-            margin: EdgeInsets.only(bottom: 10),
+            child: Container(
+              child: SearchBarWidget(
+                hintText: 'Pesquise filmes',
+                onChanged: searchMovie,
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10),
             padding: EdgeInsets.symmetric(vertical: 16),
             child: Center(
               child: TabBarWidget(
@@ -74,7 +86,7 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
               children: _tabGenres
                   .map((genre) => GenreMovies(
                         genreId: genre.id,
-                        movies: widget.movies,
+                        movies: movies,
                         genres: widget.genres,
                       ))
                   .toList(),
@@ -83,5 +95,18 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
         ],
       ),
     );
+  }
+
+  void searchMovie(String query) {
+    final movies = widget.movies
+        .where(
+          (m) => m.title.toLowerCase().contains(query.toLowerCase()),
+        )
+        .toList();
+
+    setState(() {
+      this.query = query;
+      this.movies = movies;
+    });
   }
 }
