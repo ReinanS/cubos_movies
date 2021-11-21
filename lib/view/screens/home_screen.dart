@@ -47,30 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: PreferredSize(
-          preferredSize: deviceSize * 0.25,
-          child: Column(
-            children: [
-              AppBar(
-                title: Text(
-                  'Filmes',
-                  style: TextStyle(color: Colors.black),
-                ),
-                toolbarHeight: 80,
-                backgroundColor: Colors.white,
-                elevation: 0,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  child: SearchBarWidget(
-                    hintText: 'Pesquise filmes',
-                    onChanged: movieViewModel.onChanged,
-                  ),
-                ),
-              ),
-            ],
-          ),
+        appBar: AppBar(
+          title: Text('Filmes', style: TextStyle(color: Colors.black)),
+          backgroundColor: Colors.white,
+          elevation: 0,
         ),
         body: _getGenres(apiMovieResponse, apiGenreResponse));
   }
