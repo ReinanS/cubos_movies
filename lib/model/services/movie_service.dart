@@ -6,18 +6,17 @@ import 'package:cubos_movies/model/services/base_service.dart';
 import 'package:http/http.dart' as http;
 
 class MovieService extends BaseService {
-  @override
-  Future<dynamic> getResponse(String url) async {
+  Future<dynamic> getAllMovies(int page) async {
     dynamic responseJson;
 
     final params = {
       "api_key": TmdbConstants.apiKey,
       "language": "pt-BR",
-      "page": "1",
+      "page": page.toString(),
     };
 
     final String queryString = Uri(queryParameters: params).query;
-    final String urlString = dbBaseUrl + url + '?' + queryString;
+    final String urlString = dbBaseUrl + "/movie/popular" + '?' + queryString;
 
     try {
       final response = await http.get(Uri.parse(urlString));
@@ -32,14 +31,13 @@ class MovieService extends BaseService {
   }
 
   @override
-  Future<dynamic> getMoviesGenre(String url, int genreId) async {
+  Future<dynamic> getResponse(String url) async {
     dynamic responseJson;
 
     final params = {
       "api_key": TmdbConstants.apiKey,
       "language": "pt-BR",
       "page": "1",
-      "with_genres": genreId.toString(),
     };
 
     final String queryString = Uri(queryParameters: params).query;
