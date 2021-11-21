@@ -2,10 +2,11 @@ import 'dart:developer';
 
 import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/model/movie.dart';
+import 'package:cubos_movies/model/repository/movie_repository.dart';
 import 'package:flutter/cupertino.dart';
 
 class MovieViewModel {
-  final _repository;
+  MovieRepository _repository;
 
   MovieViewModel(this._repository);
 
@@ -15,21 +16,16 @@ class MovieViewModel {
   set response(ApiResponse response) => apiResponse.value = response;
   ApiResponse get response => apiResponse.value;
 
-  List<Movie>? _cachedMovies;
-
-  Future<void> fetchMovieData() async {
+  Future<void> fetchMovieData({int page = 1}) async {
     response = ApiResponse.loading('Fetching movie data');
 
     try {
-      final movies = await _repository.fetchMovieList();
-      response = ApiResponse.completed(movies);
+      final movie = await _repository.fetchAllMovies(page);
+      response = ApiResponse.completed(movie.movies);
     } catch (e) {
       response = ApiResponse.error(e.toString());
       print(e);
     }
-
-    if (response.status != Status.ERROR)
-      _cachedMovies = response.data as List<Movie>;
   }
 
   Future<void> fetchMovieDetailsData(int movieId) async {
@@ -42,15 +38,5 @@ class MovieViewModel {
       response = ApiResponse.error(e.toString());
       print(e);
     }
-  }
-
-  onChanged(String value) {
-    List<Movie> list = _cachedMovies!
-        .where(
-          (e) => e.toString().toLowerCase().contains(value.toLowerCase()),
-        )
-        .toList();
-
-    // movies.value = movies.value!,copyWith(listMovies: list);
   }
 }
