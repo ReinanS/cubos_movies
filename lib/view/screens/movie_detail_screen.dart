@@ -1,5 +1,6 @@
 import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/model/movie_detail.dart';
+import 'package:cubos_movies/model/repository/movie_repository.dart';
 import 'package:cubos_movies/view/utils/utils.dart';
 import 'package:cubos_movies/view_model/movie_view_model.dart';
 import 'package:flutter/material.dart';
@@ -14,12 +15,20 @@ class MovieDetailScreen extends StatefulWidget {
 }
 
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
-  final MovieViewModel viewModel = MovieViewModel();
+  final MovieViewModel viewModel = MovieViewModel(MovieRepository());
 
   @override
   void initState() {
     super.initState();
+    init();
+  }
+
+  void init() async {
     viewModel.fetchMovieDetailsData(widget.movieId);
+
+    viewModel.apiResponse.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -80,9 +89,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
     switch (apiResponse.status) {
       case Status.LOADING:
-        {
-          return Center(child: CircularProgressIndicator());
-        }
+        return Center(child: CircularProgressIndicator());
 
       case Status.COMPLETED:
         return buildMovieDetail(apiResponse);
