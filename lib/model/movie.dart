@@ -14,7 +14,7 @@ class Movie {
   final String overview;
   final DateTime releaseDate;
 
-  const Movie({
+  Movie({
     required this.popularity,
     required this.voteCount,
     required this.video,
