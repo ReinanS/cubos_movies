@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cubos_movies/model/apis/app_exception.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +10,8 @@ abstract class BaseService {
   Future<dynamic> getResponse(String url);
 
   dynamic returnResponse(http.Response response) {
+    log(response.statusCode.toString());
+
     switch (response.statusCode) {
       case 200:
         dynamic responseJson = jsonDecode(response.body);
