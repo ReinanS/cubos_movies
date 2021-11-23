@@ -1,11 +1,11 @@
 import 'dart:developer';
 
 import 'package:cubos_movies/model/apis/api_response.dart';
-import 'package:cubos_movies/model/movie.dart';
+import 'package:cubos_movies/model/repository/movie_repository.dart';
 import 'package:flutter/cupertino.dart';
 
 class MovieDetailViewModel {
-  final _repository;
+  MovieRepository _repository;
 
   MovieDetailViewModel(this._repository);
 
@@ -23,7 +23,7 @@ class MovieDetailViewModel {
       response = ApiResponse.completed(movie);
     } catch (e) {
       response = ApiResponse.error(e.toString());
-      print(e);
+      log(e.toString());
     }
   }
 }

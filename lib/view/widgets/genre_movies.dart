@@ -31,16 +31,14 @@ class _GenreMoviesState extends State<GenreMovies> {
 
     return SingleChildScrollView(
       child: Column(
-          children: movieList.map((movie) {
-        return MovieCardWidget(
-          movie: movie,
-          movieGenres: movieGenderPoster(movie),
-        );
-        // return Text(movie.title);
-      }).toList()),
+        children: movieList.map((movie) {
+          return MovieCardWidget(
+            movie: movie,
+            movieGenres: movieGenderPoster(movie),
+          );
+        }).toList(),
+      ),
     );
-
-    // });
   }
 
   String movieGenderPoster(Movie movie) {
