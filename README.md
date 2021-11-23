@@ -1,8 +1,6 @@
 
 # Desafio Técnico Flutter
 
-## Desafio Incompleto em 15/11/2021
-
 Vamos construir um app para buscar filmes?
 
 Para realizar esse desafio você vai precisar:
@@ -43,9 +41,17 @@ O único critério **obrigátorio** para a entrega é o correto funcionamento do
 - [x] Arquitetura MVVM
 - [x] Consumir os dados da API The Movie DB (https://developers.themoviedb.org/3/getting-started/introduction);
 - [x] HomeScreen
-- [ ] Gênero do filme, separado em quatro tabs - Erro relacionado a gerenciamento de estado ao alternar entre as abas
-- [ ] Detalhar Filme
-- [ ] Buscar pelo nome do Filme
+- [x] Gênero do filme, separado em quatro tabs
+- [x] Detalhar Filme
+- [x] Buscar pelo nome do Filme
+
+## Melhorias
+
+- [ ] Ao clicar na caixa de busca, ele abre uma nova página e nela o usuário busca o filme utilizando API Rest
+- [ ] Carregar cada página de filmes dinamicamente de acordo com o necessário
+- [ ] Memória Cache
+- [ ] Filtro de filmes por categoria utilizando API Rest
+
 
 ## Pontos a serem estudaos ou reforçados posteriormente:
 
