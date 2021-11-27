@@ -30,7 +30,7 @@ class MovieDetail {
   final double voteAverage;
   final int voteCount;
 
-  const MovieDetail({
+  MovieDetail({
     required this.adult,
     required this.backdropPath,
     required this.belongsToCollection,
