@@ -35,16 +35,19 @@ class Movie {
         popularity: json["popularity"].toDouble(),
         voteCount: json["vote_count"],
         video: json["video"],
-        posterPath: json["poster_path"],
+        posterPath: json["poster_path"] == null ? '' : json["poster_path"],
         id: json["id"],
         adult: json["adult"],
-        backdropPath: json["backdrop_path"],
-        originalLanguage: json["original_language"],
-        originalTitle: json["original_title"],
+        backdropPath:
+            json["backdrop_path"] == null ? '' : json["backdrop_path"],
+        originalLanguage:
+            json["original_language"] == null ? '' : json["original_language"],
+        originalTitle:
+            json["original_title"] == null ? '' : json["original_title"],
         genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
-        title: json["title"],
+        title: json["title"] == null ? '' : json["title"],
         voteAverage: json["vote_average"].toDouble(),
-        overview: json["overview"],
+        overview: json["overview"] == null ? '' : json["overview"],
         releaseDate: DateTime.parse(json["release_date"]),
       );
 }

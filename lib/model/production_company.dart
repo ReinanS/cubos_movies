@@ -14,8 +14,8 @@ class ProductionCompanyModel {
   factory ProductionCompanyModel.fromJson(Map<String, dynamic> json) =>
       ProductionCompanyModel(
         id: json["id"],
-        logoPath: json["logo_path"] == null ? null : json["logo_path"],
-        name: json["name"],
-        originCountry: json["origin_country"],
+        logoPath: json["logo_path"] == null ? '' : json["logo_path"],
+        name: json["name"] == null ? 'null' : json["name"],
+        originCountry: json["origin_country"] == null ? '' : json["name"],
       );
 }
