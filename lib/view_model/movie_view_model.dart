@@ -28,6 +28,18 @@ class MovieViewModel {
     }
   }
 
+  Future<void> fetchMovieByGenreData({int page = 1, required int genre}) async {
+    response = ApiResponse.loading('Fetching movie data');
+
+    try {
+      final movie = await _repository.fetchMoviesByGenre(page, genre);
+      response = ApiResponse.completed(movie.movies);
+    } catch (e) {
+      response = ApiResponse.error(e.toString());
+      print(e);
+    }
+  }
+
   Future<void> fetchMovieDetailsData(int movieId) async {
     response = ApiResponse.loading('Fetching movie data');
 

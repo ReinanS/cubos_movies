@@ -86,7 +86,6 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
               children: _tabGenres
                   .map((genre) => GenreMovies(
                         genreId: genre.id,
-                        movies: movies,
                         genres: widget.genres,
                       ))
                   .toList(),
