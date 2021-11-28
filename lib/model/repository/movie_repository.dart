@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie.dart';
 import 'package:cubos_movies/model/movie_detail.dart';
@@ -5,12 +7,14 @@ import 'package:cubos_movies/model/movie_response.dart';
 import 'package:cubos_movies/model/services/base_service.dart';
 import 'package:cubos_movies/model/services/genre_service.dart';
 import 'package:cubos_movies/model/services/movie_by_genre_service.dart';
+import 'package:cubos_movies/model/services/movie_by_name_service.dart';
 import 'package:cubos_movies/model/services/movie_detail_service.dart';
 import 'package:cubos_movies/model/services/movie_service.dart';
 
 class MovieRepository {
   MovieService _movieService = MovieService();
   MovieByGenreService _movieGenreService = MovieByGenreService();
+  MovieByNameService _movieByNameService = MovieByNameService();
 
   BaseService _genreService = GenreService();
   BaseService _movieDetailService = MovieDetailService();
@@ -23,6 +27,12 @@ class MovieRepository {
 
   Future<MovieResponse> fetchMoviesByGenre(int page, int genre) async {
     dynamic response = await _movieGenreService.getAllMovies(page, genre);
+    MovieResponse movie = MovieResponse.fromJson(response);
+    return movie;
+  }
+
+  Future<MovieResponse> fetchMoviesByName(String query, int page) async {
+    dynamic response = await _movieByNameService.getMovies(query, page);
     MovieResponse movie = MovieResponse.fromJson(response);
     return movie;
   }

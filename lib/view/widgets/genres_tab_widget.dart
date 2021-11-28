@@ -1,16 +1,18 @@
+import 'dart:developer';
+
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie.dart';
+import 'package:cubos_movies/view/screens/movie_search_screen.dart';
 import 'package:cubos_movies/view/widgets/genre_movies.dart';
+import 'package:cubos_movies/view/widgets/search_bar_container_widget.dart';
 import 'package:cubos_movies/view/widgets/search_bar_widget.dart';
 import 'package:cubos_movies/view/widgets/tab_bar_widget.dart';
 import 'package:flutter/material.dart';
 
 class GenresTabWidget extends StatefulWidget {
-  final List<Movie> movies;
   final List<MovieGenre> genres;
 
   GenresTabWidget({
-    required this.movies,
     required this.genres,
   });
 
@@ -32,7 +34,6 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
       length: 4,
       vsync: this,
     );
-    movies = widget.movies;
   }
 
   @override
@@ -61,12 +62,16 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
-          Container(
-            child: Container(
-              child: SearchBarWidget(
-                hintText: 'Pesquise filmes',
-                onChanged: searchMovie,
-              ),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          MovieSearchScreen(genres: widget.genres)));
+            },
+            child: SearchBarContainerWidget(
+              hintText: 'Pesquise filmes',
             ),
           ),
           Container(
@@ -94,18 +99,5 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
         ],
       ),
     );
-  }
-
-  void searchMovie(String query) {
-    final movies = widget.movies
-        .where(
-          (m) => m.title.toLowerCase().contains(query.toLowerCase()),
-        )
-        .toList();
-
-    setState(() {
-      this.query = query;
-      this.movies = movies;
-    });
   }
 }

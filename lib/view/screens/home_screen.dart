@@ -57,7 +57,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _getGenres(
       ApiResponse apiMovieResponse, ApiResponse apiGenreResponse) {
-    List<Movie>? movieList = apiMovieResponse.data as List<Movie>?;
     List<MovieGenre>? genreList = apiGenreResponse.data as List<MovieGenre>?;
 
     if ((apiGenreResponse.status == Status.LOADING) ||
@@ -67,7 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     if ((apiGenreResponse.status == Status.COMPLETED) ||
         (apiMovieResponse.status == Status.COMPLETED)) {
-      return GenresTabWidget(genres: genreList!, movies: movieList!);
+      return GenresTabWidget(genres: genreList!);
     }
 
     if ((apiGenreResponse.status == Status.ERROR) ||

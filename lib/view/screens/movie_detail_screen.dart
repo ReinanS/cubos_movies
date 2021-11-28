@@ -200,15 +200,18 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     ],
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(bottom: deviceSize.height * 0.05),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: movie.genres
-                        .map((g) => GenreBox(
-                              text: g.name,
-                            ))
-                        .toList(),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: deviceSize.height * 0.05),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: movie.genres
+                          .map((g) => GenreBox(
+                                text: g.name,
+                              ))
+                          .toList(),
+                    ),
                   ),
                 ),
                 Container(
