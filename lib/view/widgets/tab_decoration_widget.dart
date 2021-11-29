@@ -10,11 +10,11 @@ class TabDecorationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 24,
-      width: 100,
+      width: 150,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(100),
         // border: Border.all(
-        //   width: 0.7,
+        //   width: 0.1,
         //   color: AppColors.black,
         // ),
       ),

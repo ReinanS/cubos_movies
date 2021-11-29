@@ -62,7 +62,7 @@ class _MovieCardWidgetState extends State<MovieCardWidget> {
                     child: FadeInImage.memoryNetwork(
                       placeholder: kTransparentImage,
                       image: TmdbConstants.imageBase + widget.movie.posterPath,
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),

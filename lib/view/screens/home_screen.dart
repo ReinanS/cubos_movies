@@ -1,14 +1,10 @@
 import 'dart:developer';
 
 import 'package:cubos_movies/model/apis/api_response.dart';
-import 'package:cubos_movies/model/movie.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/repository/movie_repository.dart';
-import 'package:cubos_movies/view/utils/utils.dart';
 import 'package:cubos_movies/view/widgets/genres_tab_widget.dart';
-import 'package:cubos_movies/view/widgets/search_bar_widget.dart';
 import 'package:cubos_movies/view_model/genre_view_model.dart';
-import 'package:cubos_movies/view_model/movie_view_model.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,7 +13,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final MovieViewModel movieViewModel = MovieViewModel(MovieRepository());
   final GenreViewModel genreViewModel = GenreViewModel(MovieRepository());
 
   @override
@@ -27,11 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   init() async {
-    movieViewModel.fetchMovieData();
-    movieViewModel.apiResponse.addListener(() {
-      setState(() {});
-    });
-
     genreViewModel.fetchGenresList();
     genreViewModel.apiResponse.addListener(() {
       setState(() {});
@@ -40,10 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ApiResponse apiMovieResponse = movieViewModel.response;
     ApiResponse apiGenreResponse = genreViewModel.response;
-
-    Size deviceSize = MediaQuery.of(context).size;
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -52,28 +39,29 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.white,
           elevation: 0,
         ),
-        body: _getGenres(apiMovieResponse, apiGenreResponse));
+        body: _getGenres(apiGenreResponse));
   }
 
-  Widget _getGenres(
-      ApiResponse apiMovieResponse, ApiResponse apiGenreResponse) {
+  Widget _getGenres(ApiResponse apiGenreResponse) {
     List<MovieGenre>? genreList = apiGenreResponse.data as List<MovieGenre>?;
 
-    if ((apiGenreResponse.status == Status.LOADING) ||
-        (apiMovieResponse.status == Status.LOADING)) {
-      return Center(child: CircularProgressIndicator());
-    }
+    switch (apiGenreResponse.status) {
+      case Status.LOADING:
+        return Center(child: CircularProgressIndicator());
 
-    if ((apiGenreResponse.status == Status.COMPLETED) ||
-        (apiMovieResponse.status == Status.COMPLETED)) {
-      return GenresTabWidget(genres: genreList!);
-    }
+      case Status.COMPLETED:
+        return GenresTabWidget(genres: genreList!);
 
-    if ((apiGenreResponse.status == Status.ERROR) ||
-        (apiMovieResponse.status == Status.ERROR)) {
-      return Center(child: Text('Please try again Later !!'));
-    }
+      case Status.ERROR:
+        return Center(
+          child: Text('Please try again Later !!'),
+        );
 
-    return Center(child: Text('Search the Genres'));
+      case Status.INITIAL:
+      default:
+        return Center(
+          child: Text('Search the Movie'),
+        );
+    }
   }
 }

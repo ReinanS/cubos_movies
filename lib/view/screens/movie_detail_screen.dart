@@ -1,10 +1,16 @@
+import 'dart:developer';
+
+import 'package:cubos_movies/model/%20movie_credits.dart';
 import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/model/movie_detail.dart';
+import 'package:cubos_movies/model/production_company.dart';
 import 'package:cubos_movies/model/repository/movie_repository.dart';
 import 'package:cubos_movies/view/utils/constansts.dart';
 import 'package:cubos_movies/view/utils/utils.dart';
+import 'package:cubos_movies/view/widgets/description_text.dart';
+import 'package:cubos_movies/view/widgets/genre_box.dart';
+import 'package:cubos_movies/view/widgets/info_box.dart';
 import 'package:cubos_movies/view_model/details_view_model.dart';
-import 'package:cubos_movies/view_model/movie_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -19,8 +25,12 @@ class MovieDetailScreen extends StatefulWidget {
 }
 
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
-  final MovieDetailViewModel viewModel =
+  final MovieDetailViewModel movieDetailViewModel =
       MovieDetailViewModel(MovieRepository());
+
+  final MovieDetailViewModel creditsViewModel =
+      MovieDetailViewModel(MovieRepository());
+
   final currencyFormat = new NumberFormat('###,###,###');
 
   @override
@@ -30,8 +40,13 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   }
 
   void init() async {
-    viewModel.fetchMovieDetailsData(widget.movieId);
-    viewModel.apiResponse.addListener(() {
+    movieDetailViewModel.fetchMovieDetailsData(widget.movieId);
+    movieDetailViewModel.apiResponse.addListener(() {
+      setState(() {});
+    });
+
+    creditsViewModel.fetchMovieCreditsData(widget.movieId);
+    creditsViewModel.apiResponse.addListener(() {
       setState(() {});
     });
   }
@@ -50,30 +65,32 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   }
 
   Widget _background(Widget body) {
-    ApiResponse apiResponse = viewModel.response;
+    ApiResponse apiMovieDetailsResponse = movieDetailViewModel.response;
+    ApiResponse apiCreditsResponse = creditsViewModel.response;
 
-    switch (apiResponse.status) {
-      case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
-
-      case Status.COMPLETED:
-        return buildMovieDetail(apiResponse);
-
-      case Status.ERROR:
-        return Center(
-          child: Text('Please try again Later !!'),
-        );
-
-      case Status.INITIAL:
-      default:
-        return Center(
-          child: Text('Search the Movie'),
-        );
+    if ((apiMovieDetailsResponse.status == Status.LOADING) ||
+        (apiCreditsResponse.status == Status.LOADING)) {
+      return Center(child: CircularProgressIndicator());
     }
+
+    if ((apiMovieDetailsResponse.status == Status.COMPLETED) ||
+        (apiCreditsResponse.status == Status.COMPLETED)) {
+      return buildMovieDetail(apiMovieDetailsResponse, apiCreditsResponse);
+    }
+
+    if ((apiMovieDetailsResponse.status == Status.ERROR) ||
+        (apiCreditsResponse.status == Status.ERROR)) {
+      return Center(child: Text('Please try again Later !!'));
+    }
+
+    return Center(child: Text('Search the Movie'));
   }
 
-  Widget buildMovieDetail(ApiResponse apiResponse) {
-    MovieDetail? movie = apiResponse.data as MovieDetail?;
+  Widget buildMovieDetail(
+      ApiResponse apiMovieDetailResponse, ApiResponse apiCreditResponse) {
+    MovieDetail? movie = apiMovieDetailResponse.data as MovieDetail?;
+    MovieCredits? credits = apiCreditResponse.data as MovieCredits?;
+
     Size deviceSize = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
@@ -98,7 +115,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 ),
                 Container(
                   margin: EdgeInsets.symmetric(vertical: 25),
-                  width: deviceSize.width * 0.6,
+                  width: double.infinity,
                   height: deviceSize.height * 0.7,
                   child: Center(
                     child: Hero(
@@ -108,7 +125,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         child: FadeInImage.memoryNetwork(
                           placeholder: kTransparentImage,
                           image: TmdbConstants.imageBase + movie!.backdropPath,
-                          fit: BoxFit.fill,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
@@ -194,7 +211,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       // PRECISA ADICIONAR DURATION DINÂMICO
                       InfoBox(
                         leadingText: 'Duração:',
-                        text: '1h 20 min',
+                        text: _getDuration(movie.runtime),
                         // text: movie.duration,
                       ),
                     ],
@@ -205,10 +222,12 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   child: Container(
                     margin: EdgeInsets.only(bottom: deviceSize.height * 0.05),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: movie.genres
-                          .map((g) => GenreBox(
-                                text: g.name,
+                          .map((g) => Container(
+                                margin: EdgeInsets.only(right: 15),
+                                child: GenreBox(
+                                  text: g.name,
+                                ),
                               ))
                           .toList(),
                     ),
@@ -235,7 +254,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   width: deviceSize.width,
                   child: InfoBox(
                     leadingText: 'PRODUTORAS:',
-                    text: 'Marvel studios',
+                    text: _getListString(
+                        _getCompanyName(movie.productionCompanies)),
                   ),
                 ),
 
@@ -244,7 +264,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   margin: EdgeInsets.only(bottom: deviceSize.height * 0.05),
                   child: DescriptionText(
                     title: 'DIRETOR',
-                    text: '',
+                    text: _getListString(_getDirectorName(credits!.crew)),
                   ),
                 ),
 
@@ -252,7 +272,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 Container(
                   child: DescriptionText(
                     title: 'ELENCO',
-                    text: '',
+                    text: _getListString(_getCastName(credits.cast)),
                   ),
                 ),
               ],
@@ -268,159 +288,65 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       ),
     );
   }
-}
 
-class BackButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    Size deviceSize = MediaQuery.of(context).size;
+  String _getDuration(int duration) {
+    if (duration == 0) {
+      return '-';
+    }
 
-    return GestureDetector(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Container(
-        width: deviceSize.width * 0.25,
-        height: deviceSize.height * 0.066,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100.0),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 0.3,
-              blurRadius: 3,
-              offset: Offset(0, 0.5), // changes position of shadow
-            )
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.arrow_back_ios,
-              color: Color(0xFF7b7e7e),
-              size: 13.54,
-            ),
-            SizedBox(
-              width: 5.0,
-            ),
-            Text(
-              'Voltar',
-              style: TextStyle(color: Color(0xFF7b7e7e), fontSize: 13),
-            ),
-          ],
-        ),
-      ),
-    );
+    Duration d = Duration(minutes: duration);
+    List<String> time = d.toString().split(':');
+    return '${time[0]}h ${time[1]} min';
   }
-}
 
-class InfoBox extends StatelessWidget {
-  InfoBox({
-    required this.leadingText,
-    required this.text,
-  });
+  String _getListString(List<String> list) {
+    String str = '';
 
-  final String leadingText;
-  final String text;
+    for (int index = 0; index < list.length; index++) {
+      if (index == list.length - 1) {
+        str += list[index];
+      } else {
+        str += list[index] + ', ';
+      }
+    }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      decoration: BoxDecoration(
-          color: AppColors.lightGrey,
-          borderRadius: BorderRadius.all(Radius.circular(8))),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            leadingText,
-            style: TextStyle(
-              color: AppColors.mediumGrey,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Flexible(
-            child: Text(
-              ' $text',
-              style: TextStyle(
-                color: AppColors.textDark,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-              softWrap: true,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-          ),
-        ],
-      ),
-    );
+    return str;
   }
-}
 
-class GenreBox extends StatelessWidget {
-  GenreBox({required this.text});
+  List<String> _getCompanyName(List<ProductionCompanyModel> listCompany) {
+    List<String> list = [];
 
-  final String text;
+    listCompany.forEach((company) {
+      list.add(company.name);
+    });
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      decoration: BoxDecoration(
-          border: Border.all(color: AppColors.mediumGrey, width: 0.1),
-          borderRadius: BorderRadius.all(Radius.circular(8))),
-      child: Text(
-        text.toUpperCase(),
-        style: TextStyle(
-          color: AppColors.mediumGrey,
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-        ),
-      ),
-    );
+    return list;
   }
-}
 
-class DescriptionText extends StatelessWidget {
-  DescriptionText({
-    required this.title,
-    required this.text,
-  });
+  List<String> _getDirectorName(List<Crew> crew) {
+    List<String> list = [];
 
-  final String title;
-  final String text;
+    List<Crew> crewList = [];
 
-  @override
-  Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    return Container(
-      width: size.width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              color: AppColors.mediumGrey,
-              fontSize: 16,
-            ),
-          ),
-          SizedBox(
-            height: size.height * 0.02,
-          ),
-          Text(
-            text,
-            style: TextStyle(
-              color: AppColors.mediumGrey,
-              fontWeight: FontWeight.bold,
-            ),
-          )
-        ],
-      ),
-    );
+    // FILTRO
+    crewList = crew.where((c) => c.job == 'Director').toList();
+
+    // ADICIONA À LISTA
+    crewList.forEach((c) {
+      list.add(c.name);
+    });
+
+    return list;
+  }
+
+  List<String> _getCastName(List<Cast> cast) {
+    List<String> list = [];
+
+    // ADICIONA À LISTA
+    cast.forEach((c) {
+      list.add(c.name);
+    });
+
+    return list;
   }
 }

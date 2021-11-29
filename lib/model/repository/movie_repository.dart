@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cubos_movies/model/%20movie_credits.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie.dart';
 import 'package:cubos_movies/model/movie_detail.dart';
@@ -8,6 +9,7 @@ import 'package:cubos_movies/model/services/base_service.dart';
 import 'package:cubos_movies/model/services/genre_service.dart';
 import 'package:cubos_movies/model/services/movie_by_genre_service.dart';
 import 'package:cubos_movies/model/services/movie_by_name_service.dart';
+import 'package:cubos_movies/model/services/movie_credits_services.dart';
 import 'package:cubos_movies/model/services/movie_detail_service.dart';
 import 'package:cubos_movies/model/services/movie_service.dart';
 
@@ -18,6 +20,7 @@ class MovieRepository {
 
   BaseService _genreService = GenreService();
   BaseService _movieDetailService = MovieDetailService();
+  BaseService _movieCreditsService = MovieCreditsService();
 
   Future<MovieResponse> fetchAllMovies(int page) async {
     dynamic response = await _movieService.getAllMovies(page);
@@ -61,5 +64,14 @@ class MovieRepository {
     MovieDetail movieDetail = MovieDetail.fromJson(response);
 
     return movieDetail;
+  }
+
+  Future<MovieCredits> fetchMovieCredits(int movieId) async {
+    dynamic response = await _movieCreditsService
+        .getResponse("/movie" + '/' + movieId.toString() + '/credits');
+
+    MovieCredits movieCredits = MovieCredits.fromJson(response);
+
+    return movieCredits;
   }
 }

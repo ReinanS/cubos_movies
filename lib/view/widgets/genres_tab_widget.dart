@@ -58,7 +58,7 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
       _tabGenres[3].name,
     ];
 
-    return Container(
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         children: [
@@ -75,13 +75,10 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: Center(
-              child: TabBarWidget(
-                controller: _tabController,
-                itens: _tabItens,
-              ),
+            margin: EdgeInsets.symmetric(vertical: 16),
+            child: TabBarWidget(
+              controller: _tabController,
+              itens: _tabItens,
             ),
           ),
           Expanded(

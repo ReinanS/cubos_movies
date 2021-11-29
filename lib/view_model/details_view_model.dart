@@ -26,4 +26,16 @@ class MovieDetailViewModel {
       log(e.toString());
     }
   }
+
+  Future<void> fetchMovieCreditsData(int movieId) async {
+    response = ApiResponse.loading('Fetching movie data');
+
+    try {
+      final movie = await _repository.fetchMovieCredits(movieId);
+      response = ApiResponse.completed(movie);
+    } catch (e) {
+      response = ApiResponse.error(e.toString());
+      print(e);
+    }
+  }
 }
