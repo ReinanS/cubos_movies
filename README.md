@@ -47,11 +47,11 @@ O único critério **obrigátorio** para a entrega é o correto funcionamento do
 
 ## Melhorias
 
-- [ ] Ao clicar na caixa de busca, ele abre uma nova página e nela o usuário busca o filme utilizando API Rest
+- [x] Ao clicar na caixa de busca, ele abre uma nova página e nela o usuário busca o filme utilizando API Rest
 - [ ] Carregar cada página de filmes dinamicamente de acordo com o necessário
 - [ ] Adicionar Memória Cache
-- [ ] Filtro de filmes por categoria utilizando API Rest
-- [ ] Corrigir inconsistência ao abrir detalhar filme (alguns não estão carregando)
+- [x] Filtro de filmes por categoria utilizando API Rest
+- [x] Corrigir inconsistência ao abrir detalhar filme (alguns não estão carregando)
 - [ ] Adicionar Testes Unitários
 
 ## Pontos a serem estudaos ou reforçados posteriormente:
