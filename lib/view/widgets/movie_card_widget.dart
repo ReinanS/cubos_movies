@@ -1,11 +1,11 @@
 import 'package:cubos_movies/view/utils/constansts.dart';
-import 'package:cubos_movies/model/movie.dart';
+import 'package:cubos_movies/model/movie_model.dart';
 import 'package:cubos_movies/view/screens/movie_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MovieCardWidget extends StatefulWidget {
-  final Movie movie;
+  final MovieModel movie;
   final String movieGenres;
 
   MovieCardWidget({

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:cubos_movies/model/apis/api_response.dart';
-import 'package:cubos_movies/model/movie.dart';
+import 'package:cubos_movies/model/movie_model.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie_response.dart';
 import 'package:cubos_movies/model/repository/movie_repository.dart';
@@ -23,7 +23,7 @@ class MovieSearchScreen extends StatefulWidget {
 class _MovieSearchScreenState extends State<MovieSearchScreen> {
   MovieRepository repository = MovieRepository();
 
-  List<Movie> movies = [];
+  List<MovieModel> movies = [];
   String query = '';
   Timer? debouncer;
 
@@ -139,7 +139,7 @@ class _MovieSearchScreenState extends State<MovieSearchScreen> {
     );
   }
 
-  String movieGenderPoster(Movie movie) {
+  String movieGenderPoster(MovieModel movie) {
     String posterGenres = '';
 
     for (int index = 0; index < movie.genreIds.length; index++) {

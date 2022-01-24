@@ -1,10 +1,10 @@
-import 'package:cubos_movies/model/movie.dart';
+import 'package:cubos_movies/model/movie_model.dart';
 
 class MovieResponse {
   int page;
   final int totalResults;
   final int totalPages;
-  final List<Movie> movies;
+  final List<MovieModel> movies;
 
   MovieResponse({
     required this.page,
@@ -17,6 +17,7 @@ class MovieResponse {
         page: json["page"],
         totalResults: json["total_results"],
         totalPages: json["total_pages"],
-        movies: List<Movie>.from(json["results"].map((x) => Movie.fromJson(x))),
+        movies: List<MovieModel>.from(
+            json["results"].map((x) => MovieModel.fromJson(x))),
       );
 }

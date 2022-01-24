@@ -1,6 +1,6 @@
 import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
-import 'package:cubos_movies/model/movie.dart';
+import 'package:cubos_movies/model/movie_model.dart';
 import 'package:cubos_movies/model/repository/movie_repository.dart';
 import 'package:cubos_movies/view/widgets/movie_card_widget.dart';
 import 'package:cubos_movies/view_model/movie_view_model.dart';
@@ -57,7 +57,7 @@ class _GenreMoviesState extends State<GenreMovies> {
   }
 
   Widget _buildMovies(ApiResponse apiResponse) {
-    List<Movie>? movieList = apiResponse.data as List<Movie>?;
+    List<MovieModel>? movieList = apiResponse.data as List<MovieModel>?;
 
     return SingleChildScrollView(
       child: Column(
@@ -71,7 +71,7 @@ class _GenreMoviesState extends State<GenreMovies> {
     );
   }
 
-  String movieGenderPoster(Movie movie) {
+  String movieGenderPoster(MovieModel movie) {
     String posterGenres = '';
 
     for (int index = 0; index < movie.genreIds.length; index++) {

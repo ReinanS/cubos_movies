@@ -1,4 +1,4 @@
-class Movie {
+class MovieModel {
   final double popularity;
   final int voteCount;
   final bool video;
@@ -14,7 +14,7 @@ class Movie {
   final String overview;
   final DateTime releaseDate;
 
-  Movie({
+  MovieModel({
     required this.popularity,
     required this.voteCount,
     required this.video,
@@ -31,7 +31,7 @@ class Movie {
     required this.releaseDate,
   });
 
-  factory Movie.fromJson(Map<String, dynamic> json) => Movie(
+  factory MovieModel.fromJson(Map<String, dynamic> json) => MovieModel(
         popularity: json["popularity"].toDouble(),
         voteCount: json["vote_count"],
         video: json["video"],
