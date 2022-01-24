@@ -1,6 +1,6 @@
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/production_company_model.dart';
-import 'package:cubos_movies/model/production_country.dart';
+import 'package:cubos_movies/model/production_country_model.dart';
 import 'package:cubos_movies/model/spoken_language.dart';
 
 class MovieDetailModel {
