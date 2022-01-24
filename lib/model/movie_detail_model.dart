@@ -3,7 +3,7 @@ import 'package:cubos_movies/model/production_company.dart';
 import 'package:cubos_movies/model/production_country.dart';
 import 'package:cubos_movies/model/spoken_language.dart';
 
-class MovieDetail {
+class MovieDetailModel {
   final bool adult;
   final String backdropPath;
   final dynamic belongsToCollection;
@@ -30,7 +30,7 @@ class MovieDetail {
   final double voteAverage;
   final int voteCount;
 
-  MovieDetail({
+  MovieDetailModel({
     required this.adult,
     required this.backdropPath,
     required this.belongsToCollection,
@@ -58,7 +58,8 @@ class MovieDetail {
     required this.voteCount,
   });
 
-  factory MovieDetail.fromJson(Map<String, dynamic> json) => MovieDetail(
+  factory MovieDetailModel.fromJson(Map<String, dynamic> json) =>
+      MovieDetailModel(
         adult: json["adult"],
         backdropPath: json["backdrop_path"],
         belongsToCollection: json["belongs_to_collection"] == null

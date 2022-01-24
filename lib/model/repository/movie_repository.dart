@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:cubos_movies/model/%20movie_credits.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie_model.dart';
-import 'package:cubos_movies/model/movie_detail.dart';
+import 'package:cubos_movies/model/movie_detail_model.dart';
 import 'package:cubos_movies/model/movie_response_model.dart';
 import 'package:cubos_movies/model/services/base_service.dart';
 import 'package:cubos_movies/model/services/genre_service.dart';
@@ -58,11 +58,11 @@ class MovieRepository {
     return movieGenreList;
   }
 
-  Future<MovieDetail> fetchMovieDetails(int movieId) async {
+  Future<MovieDetailModel> fetchMovieDetails(int movieId) async {
     dynamic response = await _movieDetailService
         .getResponse("/movie" + '/' + movieId.toString());
 
-    MovieDetail movieDetail = MovieDetail.fromJson(response);
+    MovieDetailModel movieDetail = MovieDetailModel.fromJson(response);
 
     return movieDetail;
   }

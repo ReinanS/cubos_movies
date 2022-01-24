@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:cubos_movies/model/%20movie_credits.dart';
 import 'package:cubos_movies/model/apis/api_response.dart';
-import 'package:cubos_movies/model/movie_detail.dart';
+import 'package:cubos_movies/model/movie_detail_model.dart';
 import 'package:cubos_movies/model/production_company.dart';
 import 'package:cubos_movies/model/repository/movie_repository.dart';
 import 'package:cubos_movies/view/utils/constansts.dart';
@@ -88,7 +88,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   Widget buildMovieDetail(
       ApiResponse apiMovieDetailResponse, ApiResponse apiCreditResponse) {
-    MovieDetail? movie = apiMovieDetailResponse.data as MovieDetail?;
+    MovieDetailModel? movie = apiMovieDetailResponse.data as MovieDetailModel?;
     MovieCredits? credits = apiCreditResponse.data as MovieCredits?;
 
     Size deviceSize = MediaQuery.of(context).size;
