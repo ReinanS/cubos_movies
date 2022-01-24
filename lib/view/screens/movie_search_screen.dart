@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/model/movie_model.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
-import 'package:cubos_movies/model/movie_response.dart';
+import 'package:cubos_movies/model/movie_response_model.dart';
 import 'package:cubos_movies/model/repository/movie_repository.dart';
 import 'package:cubos_movies/view/utils/utils.dart';
 import 'package:cubos_movies/view/widgets/genre_movies.dart';
@@ -49,7 +49,8 @@ class _MovieSearchScreenState extends State<MovieSearchScreen> {
   }
 
   init() async {
-    final MovieResponse movies = await repository.fetchMoviesByName(query, 1);
+    final MovieResponseModel movies =
+        await repository.fetchMoviesByName(query, 1);
 
     setState(() {
       this.movies = movies.movies;
@@ -93,7 +94,7 @@ class _MovieSearchScreenState extends State<MovieSearchScreen> {
   }
 
   void searchMovie(String query) async => debounce(() async {
-        final MovieResponse movies =
+        final MovieResponseModel movies =
             await repository.fetchMoviesByName(query, 1);
         if (!mounted) return;
 
@@ -106,13 +107,13 @@ class _MovieSearchScreenState extends State<MovieSearchScreen> {
   Widget _buildMoviesResponse() {
     return Expanded(child: _buildMovies());
 
-    // switch (apiMovieResponse.status) {
+    // switch (apiMovieResponseModel.status) {
     //   case Status.LOADING:
     //     return Center(child: CircularProgressIndicator());
 
     //   case Status.COMPLETED:
     //     return Expanded(
-    //       child: _buildMovies(apiMovieResponse),
+    //       child: _buildMovies(apiMovieResponseModel),
     //     );
 
     //   case Status.ERROR:
