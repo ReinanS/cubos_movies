@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:cubos_movies/model/%20movie_credits.dart';
 import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/model/movie_detail_model.dart';
-import 'package:cubos_movies/model/production_company.dart';
+import 'package:cubos_movies/model/production_company_model.dart';
 import 'package:cubos_movies/model/repository/movie_repository.dart';
 import 'package:cubos_movies/view/utils/constansts.dart';
 import 'package:cubos_movies/view/utils/utils.dart';
