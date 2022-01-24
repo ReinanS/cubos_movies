@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:cubos_movies/model/movie_genre.dart';
-import 'package:cubos_movies/model/movie.dart';
+import 'package:cubos_movies/model/movie_model.dart';
 import 'package:cubos_movies/view/screens/movie_search_screen.dart';
 import 'package:cubos_movies/view/widgets/genre_movies.dart';
 import 'package:cubos_movies/view/widgets/search_bar_container_widget.dart';
@@ -24,7 +24,7 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   String query = '';
-  late List<Movie> movies;
+  late List<MovieModel> movies;
 
   @override
   void initState() {

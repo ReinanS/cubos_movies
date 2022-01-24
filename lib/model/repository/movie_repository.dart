@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:cubos_movies/model/%20movie_credits.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
-import 'package:cubos_movies/model/movie.dart';
-import 'package:cubos_movies/model/movie_detail.dart';
-import 'package:cubos_movies/model/movie_response.dart';
+import 'package:cubos_movies/model/movie_model.dart';
+import 'package:cubos_movies/model/movie_detail_model.dart';
+import 'package:cubos_movies/model/movie_response_model.dart';
 import 'package:cubos_movies/model/services/base_service.dart';
 import 'package:cubos_movies/model/services/genre_service.dart';
 import 'package:cubos_movies/model/services/movie_by_genre_service.dart';
@@ -22,28 +22,29 @@ class MovieRepository {
   BaseService _movieDetailService = MovieDetailService();
   BaseService _movieCreditsService = MovieCreditsService();
 
-  Future<MovieResponse> fetchAllMovies(int page) async {
+  Future<MovieResponseModel> fetchAllMovies(int page) async {
     dynamic response = await _movieService.getAllMovies(page);
-    MovieResponse movie = MovieResponse.fromJson(response);
+    MovieResponseModel movie = MovieResponseModel.fromJson(response);
     return movie;
   }
 
-  Future<MovieResponse> fetchMoviesByGenre(int page, int genre) async {
+  Future<MovieResponseModel> fetchMoviesByGenre(int page, int genre) async {
     dynamic response = await _movieGenreService.getAllMovies(page, genre);
-    MovieResponse movie = MovieResponse.fromJson(response);
+    MovieResponseModel movie = MovieResponseModel.fromJson(response);
     return movie;
   }
 
-  Future<MovieResponse> fetchMoviesByName(String query, int page) async {
+  Future<MovieResponseModel> fetchMoviesByName(String query, int page) async {
     dynamic response = await _movieByNameService.getMovies(query, page);
-    MovieResponse movie = MovieResponse.fromJson(response);
+    MovieResponseModel movie = MovieResponseModel.fromJson(response);
     return movie;
   }
 
-  Future<List<Movie>> fetchMovieListByGenre() async {
+  Future<List<MovieModel>> fetchMovieListByGenre() async {
     dynamic response = await _movieService.getResponse("/movie/popular");
-    List<Movie> movieList =
-        List.from(response['results']).map((e) => Movie.fromJson(e)).toList();
+    List<MovieModel> movieList = List.from(response['results'])
+        .map((e) => MovieModel.fromJson(e))
+        .toList();
 
     return movieList;
   }
@@ -57,11 +58,11 @@ class MovieRepository {
     return movieGenreList;
   }
 
-  Future<MovieDetail> fetchMovieDetails(int movieId) async {
+  Future<MovieDetailModel> fetchMovieDetails(int movieId) async {
     dynamic response = await _movieDetailService
         .getResponse("/movie" + '/' + movieId.toString());
 
-    MovieDetail movieDetail = MovieDetail.fromJson(response);
+    MovieDetailModel movieDetail = MovieDetailModel.fromJson(response);
 
     return movieDetail;
   }
