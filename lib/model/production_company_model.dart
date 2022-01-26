@@ -1,21 +1,26 @@
+import 'dart:convert';
+
 class ProductionCompanyModel {
-  final int id;
-  final String logoPath;
-  final String name;
-  final String originCountry;
+  final int? id;
+  final String? logoPath;
+  final String? name;
+  final String? originCountry;
 
   ProductionCompanyModel({
-    required this.id,
-    required this.logoPath,
-    required this.name,
-    required this.originCountry,
+    this.id,
+    this.logoPath,
+    this.name,
+    this.originCountry,
   });
 
-  factory ProductionCompanyModel.fromJson(Map<String, dynamic> json) =>
+  factory ProductionCompanyModel.fromJson(String str) =>
+      ProductionCompanyModel.fromMap(json.decode(str));
+
+  factory ProductionCompanyModel.fromMap(Map<String, dynamic> json) =>
       ProductionCompanyModel(
         id: json["id"],
-        logoPath: json["logo_path"] == null ? '' : json["logo_path"],
-        name: json["name"] == null ? 'null' : json["name"],
-        originCountry: json["origin_country"] == null ? '' : json["name"],
+        logoPath: json["logo_path"] == null ? null : json["logo_path"],
+        name: json["name"],
+        originCountry: json["origin_country"],
       );
 }
