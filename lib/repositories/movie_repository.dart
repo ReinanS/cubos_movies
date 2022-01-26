@@ -25,9 +25,20 @@ class MovieRepository {
     }
   }
 
-  // Future<Either<MovieError, MovieDetailModel>> fetchMovieById(int id) async {
-  //   try {
-  //     final Response
-  //   }
-  // }
+  Future<Either<MovieError, MovieDetailModel>> fetchMovieById(int id) async {
+    try {
+      final response = await _dio.get('/movie/$id');
+      final model = MovieDetailModel.fromJson(response.data);
+      return Right(model);
+    } on DioError catch (error) {
+      if (error.response == null) {
+        return Left(MovieRepositoryError(kServerError));
+      }
+
+      return Left(
+          MovieRepositoryError(error.response?.data['status_messsage']));
+    } on Exception catch (error) {
+      return Left(MovieRepositoryError(error.toString()));
+    }
+  }
 }
