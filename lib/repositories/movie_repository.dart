@@ -6,17 +6,17 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 class MovieRepository {
-  final Dio _dio = Dio(kDioOptions);
+  final Dio _dio = Dio(TmdbApi.kDioOptions);
 
   Future<Either<MovieError, MovieResponseModel>> fetchAllMovies(
       int page) async {
     try {
       final response = await _dio.get('/movie/popular?page=$page');
-      final model = MovieResponseModel.fromJson(response.data);
+      final model = MovieResponseModel.fromMap(response.data);
       return Right(model);
     } on DioError catch (error) {
       if (error.response == null) {
-        return Left(MovieRepositoryError(kServerError));
+        return Left(MovieRepositoryError(TmdbApi.kServerError));
       }
 
       return Left(MovieRepositoryError(error.response?.data['status_message']));
@@ -28,11 +28,11 @@ class MovieRepository {
   Future<Either<MovieError, MovieDetailModel>> fetchMovieById(int id) async {
     try {
       final response = await _dio.get('/movie/$id');
-      final model = MovieDetailModel.fromJson(response.data);
+      final model = MovieDetailModel.fromMap(response.data);
       return Right(model);
     } on DioError catch (error) {
       if (error.response == null) {
-        return Left(MovieRepositoryError(kServerError));
+        return Left(MovieRepositoryError(TmdbApi.kServerError));
       }
 
       return Left(
