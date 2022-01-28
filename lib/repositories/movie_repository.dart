@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cubos_movies/core/api.dart';
 import 'package:cubos_movies/errors/movie.error.dart';
 import 'package:cubos_movies/model/movie_detail_model.dart';
@@ -15,11 +17,12 @@ class MovieRepository {
       final model = MovieResponseModel.fromMap(response.data);
       return Right(model);
     } on DioError catch (error) {
-      if (error.response == null) {
+      if (error.response != null) {
+        return Left(MovieRepositoryError(
+            error.response!.data['status_message'].toString()));
+      } else {
         return Left(MovieRepositoryError(TmdbApi.kServerError));
       }
-
-      return Left(MovieRepositoryError(error.response?.data['status_message']));
     } on Exception catch (error) {
       return Left(MovieRepositoryError(error.toString()));
     }
@@ -33,10 +36,28 @@ class MovieRepository {
     } on DioError catch (error) {
       if (error.response == null) {
         return Left(MovieRepositoryError(TmdbApi.kServerError));
+      } else {
+        return Left(MovieRepositoryError(
+            error.response!.data['status_messsage'].toString()));
       }
+    } on Exception catch (error) {
+      return Left(MovieRepositoryError(error.toString()));
+    }
+  }
 
-      return Left(
-          MovieRepositoryError(error.response?.data['status_messsage']));
+  Future<Either<MovieError, MovieResponseModel>> fetchMoviesByname(
+      String query) async {
+    try {
+      final response = await _dio.get('/search/movie' + '?query=' + query);
+      final model = MovieResponseModel.fromMap(response.data);
+      return Right(model);
+    } on DioError catch (error) {
+      if (error.response == null) {
+        return Left(MovieRepositoryError(TmdbApi.kServerError));
+      } else {
+        return Left(MovieRepositoryError(
+            error.response!.data['status_message'].toString()));
+      }
     } on Exception catch (error) {
       return Left(MovieRepositoryError(error.toString()));
     }
