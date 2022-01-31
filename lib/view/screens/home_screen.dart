@@ -1,10 +1,14 @@
 import 'dart:developer';
 
+import 'package:cubos_movies/controllers/genre_controller.dart';
+import 'package:cubos_movies/core/constant.dart';
 import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/repository/movie_repository.dart';
 import 'package:cubos_movies/view/widgets/genres_tab_widget.dart';
 import 'package:cubos_movies/view_model/genre_view_model.dart';
+import 'package:cubos_movies/widgets/centered_message.dart';
+import 'package:cubos_movies/widgets/centered_progress.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,55 +17,55 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final GenreViewModel genreViewModel = GenreViewModel(MovieRepository());
+  final _controller = GenreController();
 
   @override
   void initState() {
     super.initState();
-    init();
-  }
-
-  init() async {
-    genreViewModel.fetchGenresList();
-    genreViewModel.apiResponse.addListener(() {
-      setState(() {});
-    });
+    _initialize();
   }
 
   @override
   Widget build(BuildContext context) {
-    ApiResponse apiGenreResponse = genreViewModel.response;
-
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text('Filmes', style: TextStyle(color: Colors.black)),
-          backgroundColor: Colors.white,
-          elevation: 0,
-        ),
-        body: _getGenres(apiGenreResponse));
+        appBar: _buildAppBar(),
+        body: _getGenres());
   }
 
-  Widget _getGenres(ApiResponse apiGenreResponse) {
-    List<MovieGenre>? genreList = apiGenreResponse.data as List<MovieGenre>?;
+  Future<void> _initialize() async {
+    setState(() {
+      _controller.loading = true;
+    });
 
-    switch (apiGenreResponse.status) {
-      case Status.LOADING:
-        return Center(child: CircularProgressIndicator());
+    await _controller.fetchAllGenres();
 
-      case Status.COMPLETED:
-        return GenresTabWidget(genres: genreList!);
+    setState(() {
+      _controller.loading = false;
+    });
+  }
 
-      case Status.ERROR:
-        return Center(
-          child: Text('Please try again Later !!'),
-        );
+  _buildAppBar() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      title: Text(Constant.kAppName, style: TextStyle(color: Colors.black)),
+    );
+  }
 
-      case Status.INITIAL:
-      default:
-        return Center(
-          child: Text('Search the Movie'),
-        );
+  Widget _getGenres() {
+    if (_controller.loading) {
+      return CenteredProgress();
     }
+
+    if (_controller.movieError != null || !_controller.hasGenres) {
+      return CenteredMessage(message: _controller.movieError!.message!);
+    }
+
+    return Column(
+      children: _controller.genres.map((genre) => Text(genre.name!)).toList(),
+    );
+
+    // return GenresTabWidget(genres: _controller.genres);
   }
 }
