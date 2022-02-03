@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cubos_movies/errors/movie.error.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie_model.dart';
@@ -26,15 +28,50 @@ class MovieController {
   int get genresCount => genres.length;
   bool get hasGenres => genresCount != 0;
 
-  Future<void> initPageController() async {
-    final movies = await this.fetchAllMovies();
-    final genres = await this.fetchAllGenres();
-  }
-
   Future<Either<MovieError, MovieResponseModel>> fetchAllMovies(
       {int page = 1}) async {
     movieError = null;
     final result = await _movieRepository.fetchAllMovies(page);
+    result.fold(
+      (error) => movieError = error,
+      (movie) {
+        if (movieResponseModel == null) {
+          movieResponseModel = movie;
+        } else {
+          movieResponseModel?.page = movie.page;
+          movieResponseModel?.movies?.addAll(movie.movies!);
+        }
+      },
+    );
+
+    return result;
+  }
+
+  Future<Either<MovieError, MovieResponseModel>> fetchMoviesByGenre(
+      {int page = 1, required int genre}) async {
+    movieError = null;
+    final result = await _movieRepository.fetchMovieByGenre(page, genre);
+    result.fold(
+      (error) => movieError = error,
+      (movie) {
+        if (movieResponseModel == null) {
+          movieResponseModel = movie;
+        } else {
+          movieResponseModel?.page = movie.page;
+          movieResponseModel?.movies?.addAll(movie.movies!);
+        }
+      },
+    );
+
+    return result;
+  }
+
+  Future<Either<MovieError, MovieResponseModel>> fetchMovieByName(
+      {int page = 1, required String query}) async {
+    movieError = null;
+    final result = await _movieRepository.fetchMoviesByname(query);
+    log('Query = ' + query);
+
     result.fold(
       (error) => movieError = error,
       (movie) {
@@ -69,16 +106,16 @@ class MovieController {
     return result;
   }
 
-  String movieGenderPoster(MovieModel movie) {
+  String movieGenderPoster(MovieModel movie, List<MovieGenre> genres) {
     String posterGenres = '';
 
     for (int index = 0; index < movie.genreIds!.length; index++) {
       if (index == movie.genreIds!.length - 1) {
-        posterGenres += _genres!
+        posterGenres += genres
             .firstWhere((genre) => genre.id == movie.genreIds![index])
             .name!;
       } else {
-        posterGenres += (_genres!
+        posterGenres += (genres
                 .firstWhere((genre) => genre.id == movie.genreIds![index])
                 .name! +
             ' - ');
