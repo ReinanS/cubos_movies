@@ -45,17 +45,17 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
   @override
   Widget build(BuildContext context) {
     List<MovieGenre> _tabGenres = [
-      widget.genres.firstWhere((g) => g.name.toLowerCase() == 'ação'),
-      widget.genres.firstWhere((g) => g.name.toLowerCase() == 'aventura'),
-      widget.genres.firstWhere((g) => g.name.toLowerCase() == 'fantasia'),
-      widget.genres.firstWhere((g) => g.name.toLowerCase() == 'comédia'),
+      widget.genres.firstWhere((g) => g.id! == 28),
+      widget.genres.firstWhere((g) => g.id! == 12),
+      widget.genres.firstWhere((g) => g.id! == 14),
+      widget.genres.firstWhere((g) => g.id! == 35),
     ];
 
     final List<String> _tabItens = [
-      _tabGenres[0].name,
-      _tabGenres[1].name,
-      _tabGenres[2].name,
-      _tabGenres[3].name,
+      _tabGenres[0].name!,
+      _tabGenres[1].name!,
+      _tabGenres[2].name!,
+      _tabGenres[3].name!,
     ];
 
     return Padding(
@@ -65,10 +65,12 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
           GestureDetector(
             onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          MovieSearchScreen(genres: widget.genres)));
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      MovieSearchScreen(genres: widget.genres),
+                ),
+              );
             },
             child: SearchBarContainerWidget(
               hintText: 'Pesquise filmes',
@@ -87,7 +89,7 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
               physics: NeverScrollableScrollPhysics(),
               children: _tabGenres
                   .map((genre) => GenreMovies(
-                        genreId: genre.id,
+                        genreId: genre.id!,
                         genres: widget.genres,
                       ))
                   .toList(),

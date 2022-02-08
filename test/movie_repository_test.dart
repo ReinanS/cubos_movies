@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:cubos_movies/errors/movie.error.dart';
+import 'package:cubos_movies/model/movie_detail_model.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
+import 'package:cubos_movies/model/movie_model.dart';
 import 'package:cubos_movies/model/movie_response_model.dart';
 import 'package:cubos_movies/repositories/genre_repository.dart';
 import 'package:cubos_movies/repositories/movie_repository.dart';
@@ -24,14 +26,56 @@ void main() {
     expect(result.fold(id, id), isA<MovieError>());
   });
 
-  test('Should get Movies by name', () async {
-    final result = await _repository.fetchMoviesByname('venon');
+  test('Should get all popular movies by genre', () async {
+    final result = await _repository.fetchMovieByGenre(1, 28);
     expect(result.isRight(), true);
     expect(result.fold(id, id), isA<MovieResponseModel>());
   });
 
+  test('Should error to get all popular movies by genre', () async {
+    final result = await _repository.fetchMovieByGenre(1, 15);
+    expect(result.isRight(), true);
+    expect(result.fold(id, id), isA<MovieResponseModel>());
+  });
+
+  test('Should get Movies by name', () async {
+    final result = await _repository.fetchMoviesByname('venom');
+    expect(result.isRight(), true);
+
+    // MovieResponseModel? movieResponseModel;
+    // MovieError? movieError = null;
+
+    // result.fold(
+    //   (error) => movieError = error,
+    //   (movie) {
+    //     if (movieResponseModel == null) {
+    //       movieResponseModel = movie;
+    //     } else {
+    //       movieResponseModel?.page = movie.page;
+    //       movieResponseModel?.movies?.addAll(movie.movies!);
+    //     }
+    //   },
+    // );
+
+    // print(movieResponseModel!.movies![0].title);
+    // expect(movieResponseModel!.movies![0].title, 'Venom');
+    // expect(movieResponseModel!.movies![0], isA<MovieModel>());
+  });
+
   test('Should error to get all Movies by name', () async {
     final result = await _repository.fetchMoviesByname('');
+    expect(result.isLeft(), true);
+    expect(result.fold(id, id), isA<MovieError>());
+  });
+
+  test('Should get Movie by ID', () async {
+    final result = await _repository.fetchMovieById(703771);
+    expect(result.isRight(), true);
+    expect(result.fold(id, id), isA<MovieDetailModel>());
+  });
+
+  test('Should error to get Movie by ID', () async {
+    final result = await _repository.fetchMovieById(1);
     expect(result.isLeft(), true);
     expect(result.fold(id, id), isA<MovieError>());
   });

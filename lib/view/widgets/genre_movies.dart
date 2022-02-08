@@ -1,9 +1,10 @@
-import 'package:cubos_movies/model/apis/api_response.dart';
+import 'dart:developer';
+
+import 'package:cubos_movies/controllers/movie_controller.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
-import 'package:cubos_movies/model/movie_model.dart';
-import 'package:cubos_movies/model/repository/movie_repository.dart';
 import 'package:cubos_movies/view/widgets/movie_card_widget.dart';
-import 'package:cubos_movies/view_model/movie_view_model.dart';
+import 'package:cubos_movies/widgets/centered_message.dart';
+import 'package:cubos_movies/widgets/centered_progress.dart';
 import 'package:flutter/material.dart';
 
 class GenreMovies extends StatefulWidget {
@@ -20,19 +21,15 @@ class GenreMovies extends StatefulWidget {
 }
 
 class _GenreMoviesState extends State<GenreMovies> {
-  final MovieViewModel movieViewModel = MovieViewModel(MovieRepository());
+  final _controller = MovieController();
+  final _scrollController = ScrollController();
+  int lastPage = 1;
 
   @override
   void initState() {
     super.initState();
-    init();
-  }
-
-  init() async {
-    movieViewModel.fetchMovieByGenreData(genre: widget.genreId);
-    movieViewModel.apiResponse.addListener(() {
-      setState(() {});
-    });
+    _initScrollListener();
+    _initialize();
   }
 
   @override
@@ -40,53 +37,66 @@ class _GenreMoviesState extends State<GenreMovies> {
     return _buildGenreMovies();
   }
 
-  Widget _buildGenreMovies() {
-    ApiResponse apiMovieResponse = movieViewModel.response;
-
-    switch (apiMovieResponse.status) {
-      case Status.COMPLETED:
-        return _buildMovies(apiMovieResponse);
-      case Status.ERROR:
-        return Center(child: Text('Please try again Later !!'));
-
-      case Status.INITIAL:
-      case Status.LOADING:
-      default:
-        return Center(child: CircularProgressIndicator());
-    }
+  _initScrollListener() {
+    _scrollController.addListener(() async {
+      if (_scrollController.offset >=
+          _scrollController.position.maxScrollExtent) {
+        if (_controller.currentPage == lastPage) {
+          lastPage++;
+          log(lastPage.toString());
+          await _controller.fetchMoviesByGenre(
+              page: lastPage, genre: widget.genreId);
+          setState(() {});
+        }
+      }
+    });
   }
 
-  Widget _buildMovies(ApiResponse apiResponse) {
-    List<MovieModel>? movieList = apiResponse.data as List<MovieModel>?;
+  Future<void> _initialize() async {
+    setState(() {
+      _controller.loading = true;
+    });
 
-    return SingleChildScrollView(
-      child: Column(
-        children: movieList!.map((movie) {
-          return MovieCardWidget(
-            movie: movie,
-            movieGenres: movieGenderPoster(movie),
-          );
-        }).toList(),
+    await _controller.fetchMoviesByGenre(genre: widget.genreId);
+
+    setState(() {
+      _controller.loading = false;
+    });
+  }
+
+  Widget _buildGenreMovies() {
+    if (_controller.loading) {
+      return CenteredProgress();
+    }
+
+    if (_controller.movieError != null || !_controller.hasMovies) {
+      return CenteredMessage(message: _controller.movieError!.message!);
+    }
+    return _buildMovies();
+  }
+
+  Widget _buildMovies() {
+    return RefreshIndicator(
+      onRefresh: _initialize,
+      child: GridView.builder(
+        controller: _scrollController,
+        padding: const EdgeInsets.all(2.0),
+        itemCount: _controller.moviesCount,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 1,
+          mainAxisSpacing: 2,
+          childAspectRatio: 0.65,
+        ),
+        itemBuilder: _buildMovieCard,
       ),
     );
   }
 
-  String movieGenderPoster(MovieModel movie) {
-    String posterGenres = '';
-
-    for (int index = 0; index < movie.genreIds.length; index++) {
-      if (index == movie.genreIds.length - 1) {
-        posterGenres += widget.genres
-            .firstWhere((genre) => genre.id == movie.genreIds[index])
-            .name;
-      } else {
-        posterGenres += widget.genres
-                .firstWhere((genre) => genre.id == movie.genreIds[index])
-                .name +
-            ' - ';
-      }
-    }
-
-    return posterGenres;
+  Widget _buildMovieCard(context, index) {
+    final movie = _controller.movies[index];
+    return MovieCardWidget(
+      movie: movie,
+      movieGenres: _controller.movieGenderPoster(movie, widget.genres),
+    );
   }
 }

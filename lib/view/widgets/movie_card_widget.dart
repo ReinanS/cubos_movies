@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cubos_movies/view/utils/constansts.dart';
 import 'package:cubos_movies/model/movie_model.dart';
 import 'package:cubos_movies/view/screens/movie_detail_screen.dart';
@@ -33,8 +35,10 @@ class _MovieCardWidgetState extends State<MovieCardWidget> {
             context,
             MaterialPageRoute(
                 builder: (context) => MovieDetailScreen(
-                      movieId: widget.movie.id,
+                      movieId: widget.movie.id!,
                     )));
+
+        log(widget.movie.id.toString());
       },
       child: Container(
         width: double.infinity,
@@ -53,7 +57,7 @@ class _MovieCardWidgetState extends State<MovieCardWidget> {
           child: Stack(
             children: [
               Hero(
-                tag: widget.movie.id,
+                tag: widget.movie.id!,
                 child: Container(
                   height: deviceSize.height * 0.7,
                   width: deviceSize.width * 0.8,
@@ -61,7 +65,9 @@ class _MovieCardWidgetState extends State<MovieCardWidget> {
                     borderRadius: BorderRadius.circular(16),
                     child: FadeInImage.memoryNetwork(
                       placeholder: kTransparentImage,
-                      image: TmdbConstants.imageBase + widget.movie.posterPath,
+                      image: widget.movie.posterPath != null
+                          ? TmdbConstants.imageBase + widget.movie.posterPath!
+                          : 'https://motivatevalmorgan.com/wp-content/uploads/2016/06/default-movie-768x1129.jpg',
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -89,7 +95,7 @@ class _MovieCardWidgetState extends State<MovieCardWidget> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         child: Text(
-                          widget.movie.title.toUpperCase(),
+                          widget.movie.title!.toUpperCase(),
                           overflow: TextOverflow.clip,
                           style: TextStyle(
                             color: Colors.white,
