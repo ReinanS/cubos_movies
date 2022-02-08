@@ -10,11 +10,27 @@ import 'package:dio/dio.dart';
 class MovieRepository {
   final Dio _dio = Dio(TmdbApi.kDioOptions);
 
-  Future<Either<MovieError, MovieResponseModel>> fetchAllMovies(
-      int page) async {
+  Future<Either<MovieError, MovieResponseModel>> fetchAllMovies(int page) {
+    return _fetchMovieResponse('/movie/popular?page=$page');
+  }
+
+  Future<Either<MovieError, MovieResponseModel>> fetchMoviesByname(
+      String query) async {
+    return await _fetchMovieResponse('/search/movie?query=$query');
+  }
+
+  Future<Either<MovieError, MovieResponseModel>> fetchMovieByGenre(
+      int page, int genre) {
+    return _fetchMovieResponse('/movie/popular?page=$page&with_genres=$genre');
+  }
+
+  Future<Either<MovieError, MovieResponseModel>> _fetchMovieResponse(
+      String url) async {
     try {
-      final response = await _dio.get('/movie/popular?page=$page');
+      final response = await _dio.get(url);
       final model = MovieResponseModel.fromMap(response.data);
+      log('Movies = ' + response.statusCode.toString());
+
       return Right(model);
     } on DioError catch (error) {
       if (error.response != null) {
@@ -32,6 +48,8 @@ class MovieRepository {
     try {
       final response = await _dio.get('/movie/$id');
       final model = MovieDetailModel.fromMap(response.data);
+      log(response.statusCode.toString());
+
       return Right(model);
     } on DioError catch (error) {
       if (error.response == null) {
@@ -39,24 +57,6 @@ class MovieRepository {
       } else {
         return Left(MovieRepositoryError(
             error.response!.data['status_messsage'].toString()));
-      }
-    } on Exception catch (error) {
-      return Left(MovieRepositoryError(error.toString()));
-    }
-  }
-
-  Future<Either<MovieError, MovieResponseModel>> fetchMoviesByname(
-      String query) async {
-    try {
-      final response = await _dio.get('/search/movie' + '?query=' + query);
-      final model = MovieResponseModel.fromMap(response.data);
-      return Right(model);
-    } on DioError catch (error) {
-      if (error.response == null) {
-        return Left(MovieRepositoryError(TmdbApi.kServerError));
-      } else {
-        return Left(MovieRepositoryError(
-            error.response!.data['status_message'].toString()));
       }
     } on Exception catch (error) {
       return Left(MovieRepositoryError(error.toString()));
