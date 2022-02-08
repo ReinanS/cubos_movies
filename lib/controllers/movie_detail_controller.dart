@@ -6,7 +6,7 @@ import 'package:dartz/dartz.dart';
 class MovieDetailController {
   final _repository = MovieRepository();
 
-  MovieDetailModel? movieDetail;
+  MovieDetailModel? movie;
   MovieError? movieError;
 
   bool loading = true;
@@ -17,9 +17,12 @@ class MovieDetailController {
 
     result.fold(
       (error) => movieError = error,
-      (detail) => movieDetail = movieDetail,
+      (detail) => movie = detail,
     );
 
     return result;
   }
+
+  // movie credits
+
 }
