@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cubos_movies/controllers/movie_detail_controller.dart';
 import 'package:cubos_movies/model/%20movie_credits.dart';
 import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/model/movie_detail_model.dart';
@@ -11,6 +12,8 @@ import 'package:cubos_movies/view/widgets/description_text.dart';
 import 'package:cubos_movies/view/widgets/genre_box.dart';
 import 'package:cubos_movies/view/widgets/info_box.dart';
 import 'package:cubos_movies/view_model/details_view_model.dart';
+import 'package:cubos_movies/widgets/centered_message.dart';
+import 'package:cubos_movies/widgets/centered_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -25,71 +28,58 @@ class MovieDetailScreen extends StatefulWidget {
 }
 
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
-  final MovieDetailViewModel movieDetailViewModel =
-      MovieDetailViewModel(MovieRepository());
-
-  final MovieDetailViewModel creditsViewModel =
-      MovieDetailViewModel(MovieRepository());
-
+  final _controller = MovieDetailController();
   final currencyFormat = new NumberFormat('###,###,###');
 
   @override
   void initState() {
     super.initState();
-    init();
-  }
-
-  void init() async {
-    movieDetailViewModel.fetchMovieDetailsData(widget.movieId);
-    movieDetailViewModel.apiResponse.addListener(() {
-      setState(() {});
-    });
-
-    creditsViewModel.fetchMovieCreditsData(widget.movieId);
-    creditsViewModel.apiResponse.addListener(() {
-      setState(() {});
-    });
+    _initialize();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: _background(
-          _body(),
-        ));
+      backgroundColor: Colors.white,
+      body: _background(
+        child: _body(),
+      ),
+    );
+  }
+
+  Future<void> _initialize() async {
+    setState(() {
+      _controller.loading = true;
+    });
+
+    await _controller.fetchMovieById(widget.movieId);
+
+    setState(() {
+      _controller.loading = false;
+    });
   }
 
   Widget _body() {
-    return Container();
+    return Container(
+      child: Text(widget.movieId.toString()),
+    );
   }
 
-  Widget _background(Widget body) {
-    ApiResponse apiMovieDetailsResponse = movieDetailViewModel.response;
-    ApiResponse apiCreditsResponse = creditsViewModel.response;
-
-    if ((apiMovieDetailsResponse.status == Status.LOADING) ||
-        (apiCreditsResponse.status == Status.LOADING)) {
-      return Center(child: CircularProgressIndicator());
+  Widget _background({required Widget child}) {
+    if (_controller.loading) {
+      return CenteredProgress();
     }
 
-    if ((apiMovieDetailsResponse.status == Status.COMPLETED) ||
-        (apiCreditsResponse.status == Status.COMPLETED)) {
-      return buildMovieDetail(apiMovieDetailsResponse, apiCreditsResponse);
+    if (_controller.movieError != null) {
+      return CenteredMessage(message: _controller.movieError!.message!);
     }
 
-    if ((apiMovieDetailsResponse.status == Status.ERROR) ||
-        (apiCreditsResponse.status == Status.ERROR)) {
-      return Center(child: Text('Please try again Later !!'));
-    }
-
-    return Center(child: Text('Search the Movie'));
+    // return Center(child: Text(_controller.movie!.title!));
+    return buildMovieDetail();
   }
 
-  Widget buildMovieDetail(
-      ApiResponse apiMovieDetailResponse, ApiResponse apiCreditResponse) {
-    MovieDetailModel? movie = apiMovieDetailResponse.data as MovieDetailModel?;
-    MovieCredits? credits = apiCreditResponse.data as MovieCredits?;
+  Widget buildMovieDetail() {
+    MovieDetailModel movie = _controller.movie!;
 
     Size deviceSize = MediaQuery.of(context).size;
 
@@ -124,7 +114,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                         child: FadeInImage.memoryNetwork(
                           placeholder: kTransparentImage,
-                          image: TmdbConstants.imageBase + movie!.backdropPath,
+                          image: TmdbConstants.imageBase + movie.backdropPath!,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -165,7 +155,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 Container(
                   margin: EdgeInsets.only(bottom: deviceSize.height * 0.04),
                   child: Text(
-                    movie.title.toUpperCase(),
+                    movie.title!.toUpperCase(),
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -205,13 +195,13 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     children: [
                       InfoBox(
                         leadingText: 'Ano:',
-                        text: movie.releaseDate.year.toString(),
+                        text: movie.releaseDate!.year.toString(),
                       ),
 
                       // PRECISA ADICIONAR DURATION DINÂMICO
                       InfoBox(
                         leadingText: 'Duração:',
-                        text: _getDuration(movie.runtime),
+                        text: _getDuration(movie.runtime!),
                         // text: movie.duration,
                       ),
                     ],
@@ -222,11 +212,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   child: Container(
                     margin: EdgeInsets.only(bottom: deviceSize.height * 0.05),
                     child: Row(
-                      children: movie.genres
+                      children: movie.genres!
                           .map((g) => Container(
                                 margin: EdgeInsets.only(right: 15),
                                 child: GenreBox(
-                                  text: g.name,
+                                  text: g.name!,
                                 ),
                               ))
                           .toList(),
@@ -235,8 +225,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: deviceSize.height * 0.03),
-                  child:
-                      DescriptionText(title: 'Descrição', text: movie.overview),
+                  child: DescriptionText(
+                      title: 'Descrição', text: movie.overview!),
                 ),
 
                 Container(
@@ -255,26 +245,26 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   child: InfoBox(
                     leadingText: 'PRODUTORAS:',
                     text: _getListString(
-                        _getCompanyName(movie.productionCompanies)),
+                        _getCompanyName(movie.productionCompanies!)),
                   ),
                 ),
 
                 // FALTA
-                Container(
-                  margin: EdgeInsets.only(bottom: deviceSize.height * 0.05),
-                  child: DescriptionText(
-                    title: 'DIRETOR',
-                    text: _getListString(_getDirectorName(credits!.crew)),
-                  ),
-                ),
+                // Container(
+                //   margin: EdgeInsets.only(bottom: deviceSize.height * 0.05),
+                //   child: DescriptionText(
+                //     title: 'DIRETOR',
+                //     text: _getListString(_getDirectorName(credits!.crew)),
+                //   ),
+                // ),
 
-                // FALTA
-                Container(
-                  child: DescriptionText(
-                    title: 'ELENCO',
-                    text: _getListString(_getCastName(credits.cast)),
-                  ),
-                ),
+                // // FALTA
+                // Container(
+                //   child: DescriptionText(
+                //     title: 'ELENCO',
+                //     text: _getListString(_getCastName(credits.cast)),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -317,7 +307,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     List<String> list = [];
 
     listCompany.forEach((company) {
-      list.add(company.name);
+      list.add(company.name!);
     });
 
     return list;

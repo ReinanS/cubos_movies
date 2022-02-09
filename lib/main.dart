@@ -1,4 +1,4 @@
-import 'package:cubos_movies/view/screens/home_screen.dart';
+import 'package:cubos_movies/pages/movie_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,7 +11,7 @@ class AppWidget extends StatelessWidget {
     return MaterialApp(
       title: "CubosMovies",
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: MoviePage(),
     );
   }
 }

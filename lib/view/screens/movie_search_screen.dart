@@ -1,15 +1,16 @@
 import 'dart:async';
+import 'dart:developer';
 
+import 'package:cubos_movies/controllers/movie_controller.dart';
 import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/model/movie_model.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie_response_model.dart';
-import 'package:cubos_movies/model/repository/movie_repository.dart';
 import 'package:cubos_movies/view/utils/utils.dart';
-import 'package:cubos_movies/view/widgets/genre_movies.dart';
 import 'package:cubos_movies/view/widgets/movie_card_widget.dart';
 import 'package:cubos_movies/view/widgets/search_bar_widget.dart';
-import 'package:cubos_movies/view_model/movie_view_model.dart';
+import 'package:cubos_movies/widgets/centered_message.dart';
+import 'package:cubos_movies/widgets/centered_progress.dart';
 import 'package:flutter/material.dart';
 
 class MovieSearchScreen extends StatefulWidget {
@@ -21,40 +22,24 @@ class MovieSearchScreen extends StatefulWidget {
 }
 
 class _MovieSearchScreenState extends State<MovieSearchScreen> {
-  MovieRepository repository = MovieRepository();
+  final _controller = MovieController();
+  final _scrollController = ScrollController();
+  int lastPage = 1;
 
-  List<MovieModel> movies = [];
   String query = '';
   Timer? debouncer;
 
   @override
   void initState() {
     super.initState();
-    init();
+    _initScrollListener();
+    this._initialize();
   }
 
   @override
   void dispose() {
-    debouncer?.cancel();
+    this.debouncer?.cancel();
     super.dispose();
-  }
-
-  void debounce(VoidCallback callback,
-      {Duration duration = const Duration(milliseconds: 1000)}) {
-    if (debouncer != null) {
-      debouncer!.cancel();
-    }
-
-    debouncer = Timer(duration, callback);
-  }
-
-  init() async {
-    final MovieResponseModel movies =
-        await repository.fetchMoviesByName(query, 1);
-
-    setState(() {
-      this.movies = movies.movies;
-    });
   }
 
   @override
@@ -93,69 +78,91 @@ class _MovieSearchScreenState extends State<MovieSearchScreen> {
     );
   }
 
+  void debounce(VoidCallback callback,
+      {Duration duration = const Duration(milliseconds: 1000)}) {
+    if (debouncer != null) {
+      debouncer!.cancel();
+    }
+
+    debouncer = Timer(duration, callback);
+  }
+
+  Future<void> _initialize() async {
+    setState(() {
+      _controller.loading = true;
+    });
+
+    await _controller.fetchMovieByName(query: query);
+
+    setState(() {
+      _controller.loading = false;
+    });
+  }
+
+  _initScrollListener() {
+    _scrollController.addListener(() async {
+      if (_scrollController.offset >=
+          _scrollController.position.maxScrollExtent) {
+        if (_controller.currentPage == lastPage) {
+          lastPage++;
+          log(lastPage.toString());
+          await _controller.fetchMovieByName(query: query, page: lastPage);
+          setState(() {});
+        }
+      }
+    });
+  }
+
   void searchMovie(String query) async => debounce(() async {
-        final MovieResponseModel movies =
-            await repository.fetchMoviesByName(query, 1);
+        setState(() {
+          _controller.loading = true;
+        });
+
+        await _controller.fetchMovieByName(query: query);
+
+        setState(() {
+          _controller.loading = false;
+        });
+
         if (!mounted) return;
 
         setState(() {
           this.query = query;
-          this.movies = movies.movies;
+          log(_controller.moviesCount.toString());
         });
       });
 
   Widget _buildMoviesResponse() {
+    if (_controller.loading) {
+      return CenteredProgress();
+    }
+
+    if (_controller.movieError != null || !_controller.hasMovies) {
+      return CenteredMessage(message: _controller.movieError!.message!);
+    }
+
     return Expanded(child: _buildMovies());
-
-    // switch (apiMovieResponseModel.status) {
-    //   case Status.LOADING:
-    //     return Center(child: CircularProgressIndicator());
-
-    //   case Status.COMPLETED:
-    //     return Expanded(
-    //       child: _buildMovies(apiMovieResponseModel),
-    //     );
-
-    //   case Status.ERROR:
-    //     return Center(child: Text('Please try again Later !!'));
-
-    //   case Status.INITIAL:
-    //   default:
-    //     return Center(child: Text('Search the Movies'));
-    // }
   }
 
   Widget _buildMovies() {
-    return SingleChildScrollView(
-      child: Column(
-        children: movies.map((movie) {
-          // return Text(movie.title);
-          return MovieCardWidget(
-            movie: movie,
-            movieGenres: movieGenderPoster(movie),
-            // movieGenres: movieGenderPoster(movie),
-          );
-        }).toList(),
+    return GridView.builder(
+      controller: _scrollController,
+      padding: const EdgeInsets.all(2.0),
+      itemCount: _controller.moviesCount,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1,
+        mainAxisSpacing: 5,
+        childAspectRatio: 0.65,
       ),
+      itemBuilder: _buildMovieCard,
     );
   }
 
-  String movieGenderPoster(MovieModel movie) {
-    String posterGenres = '';
-
-    for (int index = 0; index < movie.genreIds.length; index++) {
-      if (index == movie.genreIds.length - 1) {
-        posterGenres += widget.genres
-            .firstWhere((genre) => genre.id == movie.genreIds[index])
-            .name;
-      } else {
-        posterGenres += widget.genres
-                .firstWhere((genre) => genre.id == movie.genreIds[index])
-                .name +
-            ' - ';
-      }
-    }
-
-    return posterGenres;
+  Widget _buildMovieCard(context, index) {
+    final movie = _controller.movies[index];
+    return MovieCardWidget(
+      movie: movie,
+      movieGenres: _controller.movieGenderPoster(movie, widget.genres),
+    );
   }
 }

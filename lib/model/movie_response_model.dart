@@ -1,24 +1,29 @@
-import 'package:cubos_movies/model/movie_model.dart';
+import 'dart:convert';
+
+import 'movie_model.dart';
 
 class MovieResponseModel {
-  int page;
-  final int totalResults;
-  final int totalPages;
-  final List<MovieModel> movies;
+  int? page;
+  final int? totalResults;
+  final int? totalPages;
+  final List<MovieModel>? movies;
 
   MovieResponseModel({
-    required this.page,
-    required this.totalResults,
-    required this.totalPages,
-    required this.movies,
+    this.page,
+    this.totalResults,
+    this.totalPages,
+    this.movies,
   });
 
-  factory MovieResponseModel.fromJson(Map<String, dynamic> json) =>
+  factory MovieResponseModel.fromJson(String str) =>
+      MovieResponseModel.fromMap(json.decode(str));
+
+  factory MovieResponseModel.fromMap(Map<String, dynamic> json) =>
       MovieResponseModel(
         page: json["page"],
         totalResults: json["total_results"],
         totalPages: json["total_pages"],
         movies: List<MovieModel>.from(
-            json["results"].map((x) => MovieModel.fromJson(x))),
+            json["results"].map((x) => MovieModel.fromMap(x))),
       );
 }
