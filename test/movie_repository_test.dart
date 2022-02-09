@@ -39,31 +39,12 @@ void main() {
   });
 
   test('Should get Movies by name', () async {
-    final result = await _repository.fetchMoviesByname('venom');
+    final result = await _repository.fetchMoviesByname(1, 'venom');
     expect(result.isRight(), true);
-
-    // MovieResponseModel? movieResponseModel;
-    // MovieError? movieError = null;
-
-    // result.fold(
-    //   (error) => movieError = error,
-    //   (movie) {
-    //     if (movieResponseModel == null) {
-    //       movieResponseModel = movie;
-    //     } else {
-    //       movieResponseModel?.page = movie.page;
-    //       movieResponseModel?.movies?.addAll(movie.movies!);
-    //     }
-    //   },
-    // );
-
-    // print(movieResponseModel!.movies![0].title);
-    // expect(movieResponseModel!.movies![0].title, 'Venom');
-    // expect(movieResponseModel!.movies![0], isA<MovieModel>());
   });
 
   test('Should error to get all Movies by name', () async {
-    final result = await _repository.fetchMoviesByname('');
+    final result = await _repository.fetchMoviesByname(1, '');
     expect(result.isLeft(), true);
     expect(result.fold(id, id), isA<MovieError>());
   });
