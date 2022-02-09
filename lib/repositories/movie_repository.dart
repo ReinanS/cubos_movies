@@ -15,8 +15,9 @@ class MovieRepository {
   }
 
   Future<Either<MovieError, MovieResponseModel>> fetchMoviesByname(
-      String query) async {
-    return await _fetchMovieResponse('/search/movie?query=$query');
+      int page, String query) {
+    log(query);
+    return _fetchMovieResponse('/search/movie?page=$page&query=$query');
   }
 
   Future<Either<MovieError, MovieResponseModel>> fetchMovieByGenre(
@@ -29,7 +30,7 @@ class MovieRepository {
     try {
       final response = await _dio.get(url);
       final model = MovieResponseModel.fromMap(response.data);
-      log('Movies = ' + response.statusCode.toString());
+      log('Status = ' + response.statusCode.toString());
 
       return Right(model);
     } on DioError catch (error) {

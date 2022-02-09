@@ -69,9 +69,7 @@ class MovieController {
   Future<Either<MovieError, MovieResponseModel>> fetchMovieByName(
       {int page = 1, required String query}) async {
     movieError = null;
-    final result = await _movieRepository.fetchMoviesByname(query);
-    log('Query = ' + query);
-
+    final result = await _movieRepository.fetchMoviesByname(page, query);
     result.fold(
       (error) => movieError = error,
       (movie) {
