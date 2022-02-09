@@ -23,55 +23,23 @@ class MovieSearchScreen extends StatefulWidget {
 
 class _MovieSearchScreenState extends State<MovieSearchScreen> {
   final _controller = MovieController();
-  List<MovieModel> movies = [];
+  final _scrollController = ScrollController();
+  int lastPage = 1;
+
   String query = '';
   Timer? debouncer;
 
   @override
   void initState() {
     super.initState();
-    this._init();
+    _initScrollListener();
+    this._initialize();
   }
 
   @override
   void dispose() {
     this.debouncer?.cancel();
     super.dispose();
-  }
-
-  void debounce(VoidCallback callback,
-      {Duration duration = const Duration(milliseconds: 500)}) {
-    if (debouncer != null) {
-      debouncer!.cancel();
-    }
-
-    debouncer = Timer(duration, callback);
-  }
-
-  Future<void> _init() async {
-    setState(() {
-      _controller.loading = true;
-    });
-
-    await _controller.fetchAllGenres();
-    await _controller.fetchMovieByName(query: query);
-
-    setState(() {
-      _controller.loading = false;
-      this.movies = _controller.movies;
-    });
-  }
-
-  Future<void> updateMovies(String query) async {
-    setState(() {
-      _controller.loading = true;
-    });
-
-    await _controller.fetchMovieByName(query: query);
-
-    setState(() {
-      _controller.loading = false;
-    });
   }
 
   @override
@@ -110,14 +78,57 @@ class _MovieSearchScreenState extends State<MovieSearchScreen> {
     );
   }
 
+  void debounce(VoidCallback callback,
+      {Duration duration = const Duration(milliseconds: 1000)}) {
+    if (debouncer != null) {
+      debouncer!.cancel();
+    }
+
+    debouncer = Timer(duration, callback);
+  }
+
+  Future<void> _initialize() async {
+    setState(() {
+      _controller.loading = true;
+    });
+
+    await _controller.fetchMovieByName(query: query);
+
+    setState(() {
+      _controller.loading = false;
+    });
+  }
+
+  _initScrollListener() {
+    _scrollController.addListener(() async {
+      if (_scrollController.offset >=
+          _scrollController.position.maxScrollExtent) {
+        if (_controller.currentPage == lastPage) {
+          lastPage++;
+          log(lastPage.toString());
+          await _controller.fetchMovieByName(query: query, page: lastPage);
+          setState(() {});
+        }
+      }
+    });
+  }
+
   void searchMovie(String query) async => debounce(() async {
+        setState(() {
+          _controller.loading = true;
+        });
+
         await _controller.fetchMovieByName(query: query);
+
+        setState(() {
+          _controller.loading = false;
+        });
 
         if (!mounted) return;
 
         setState(() {
           this.query = query;
-          this.movies = _controller.movies;
+          log(_controller.moviesCount.toString());
         });
       });
 
@@ -126,25 +137,32 @@ class _MovieSearchScreenState extends State<MovieSearchScreen> {
       return CenteredProgress();
     }
 
-    // if (_controller.movieError != null ||
-    //     !_controller.hasMovies ||
-    //     !_controller.hasGenres) {
-    //   return CenteredMessage(message: _controller.movieError!.message!);
-    // }
+    if (_controller.movieError != null || !_controller.hasMovies) {
+      return CenteredMessage(message: _controller.movieError!.message!);
+    }
 
     return Expanded(child: _buildMovies());
   }
 
   Widget _buildMovies() {
-    return ListView.builder(
-        itemCount: movies.length,
-        itemBuilder: (context, index) {
-          final movie = movies[index];
-          return MovieCardWidget(
-            movie: movie,
-            movieGenres:
-                _controller.movieGenderPoster(movie, _controller.genres),
-          );
-        });
+    return GridView.builder(
+      controller: _scrollController,
+      padding: const EdgeInsets.all(2.0),
+      itemCount: _controller.moviesCount,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 1,
+        mainAxisSpacing: 5,
+        childAspectRatio: 0.65,
+      ),
+      itemBuilder: _buildMovieCard,
+    );
+  }
+
+  Widget _buildMovieCard(context, index) {
+    final movie = _controller.movies[index];
+    return MovieCardWidget(
+      movie: movie,
+      movieGenres: _controller.movieGenderPoster(movie, widget.genres),
+    );
   }
 }
