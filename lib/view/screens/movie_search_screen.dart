@@ -7,7 +7,7 @@ import 'package:cubos_movies/model/movie_model.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie_response_model.dart';
 import 'package:cubos_movies/view/utils/utils.dart';
-import 'package:cubos_movies/view/widgets/movie_card_widget.dart';
+import 'package:cubos_movies/widgets/movie_card_widget.dart';
 import 'package:cubos_movies/view/widgets/search_bar_widget.dart';
 import 'package:cubos_movies/widgets/centered_message.dart';
 import 'package:cubos_movies/widgets/centered_progress.dart';

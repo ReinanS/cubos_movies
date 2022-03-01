@@ -11,7 +11,6 @@ class AppWidget extends StatelessWidget {
     return MaterialApp(
       title: "CubosMovies",
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
       home: MoviePage(),
     );
   }

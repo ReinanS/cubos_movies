@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:cubos_movies/controllers/movie_controller.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
-import 'package:cubos_movies/view/widgets/movie_card_widget.dart';
+import 'package:cubos_movies/widgets/movie_card_widget.dart';
 import 'package:cubos_movies/widgets/centered_message.dart';
 import 'package:cubos_movies/widgets/centered_progress.dart';
 import 'package:flutter/material.dart';

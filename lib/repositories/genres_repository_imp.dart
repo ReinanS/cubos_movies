@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cubos_movies/core/api.dart';
 import 'package:cubos_movies/errors/movie.error.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
@@ -15,8 +17,9 @@ class GenresRepositoryImp extends GenresRepository {
   Future<Either<MovieError, List<MovieGenre>>> getGenres() async {
     try {
       final response = await _dioService.getDio().get('/genre/movie/list');
-      final jsonData = response.data['genres'] as List;
+      log(response.statusCode.toString());
 
+      final jsonData = response.data['genres'] as List;
       List<MovieGenre> genresList =
           jsonData.map((e) => MovieGenre.fromMap(e)).toList();
 

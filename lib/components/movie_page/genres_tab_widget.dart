@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie_model.dart';
 import 'package:cubos_movies/view/screens/movie_search_screen.dart';
-import 'package:cubos_movies/view/widgets/genre_movies.dart';
+import 'package:cubos_movies/components/movie_page/genre_movies.dart';
 import 'package:cubos_movies/view/widgets/search_bar_container_widget.dart';
 import 'package:cubos_movies/view/widgets/search_bar_widget.dart';
 import 'package:cubos_movies/view/widgets/tab_bar_widget.dart';
@@ -73,7 +73,7 @@ class _GenresTabWidgetState extends State<GenresTabWidget>
               );
             },
             child: SearchBarContainerWidget(
-              hintText: 'Pesquise filmes',
+              hintText: 'Search Movies',
             ),
           ),
           Container(

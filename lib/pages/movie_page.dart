@@ -1,10 +1,8 @@
-import 'dart:developer';
-
 import 'package:cubos_movies/controllers/genre_controller.dart';
 import 'package:cubos_movies/core/constant.dart';
 import 'package:cubos_movies/repositories/genres_repository_imp.dart';
 import 'package:cubos_movies/service/dio_service_imp.dart';
-import 'package:cubos_movies/view/widgets/genres_tab_widget.dart';
+import 'package:cubos_movies/components/movie_page/genres_tab_widget.dart';
 import 'package:cubos_movies/widgets/centered_message.dart';
 import 'package:flutter/material.dart';
 import '../widgets/centered_progress.dart';

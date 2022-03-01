@@ -6,6 +6,7 @@ import 'package:cubos_movies/model/apis/api_response.dart';
 import 'package:cubos_movies/model/movie_detail_model.dart';
 import 'package:cubos_movies/model/production_company_model.dart';
 import 'package:cubos_movies/model/repository/movie_repository.dart';
+import 'package:cubos_movies/utils/api.utils.dart';
 import 'package:cubos_movies/view/utils/constansts.dart';
 import 'package:cubos_movies/view/utils/utils.dart';
 import 'package:cubos_movies/view/widgets/description_text.dart';
@@ -114,7 +115,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                         child: FadeInImage.memoryNetwork(
                           placeholder: kTransparentImage,
-                          image: TmdbConstants.imageBase + movie.backdropPath!,
+                          image: API.requestImage(movie.backdropPath!),
                           fit: BoxFit.cover,
                         ),
                       ),
