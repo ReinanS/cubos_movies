@@ -19,17 +19,19 @@ class CenteredMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: padding,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          _buildIcon(),
-          SizedBox(height: space),
-          _buildText(),
-        ],
+    return Scaffold(
+      body: Container(
+        padding: padding,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            _buildIcon(),
+            SizedBox(height: space),
+            _buildText(),
+          ],
+        ),
       ),
     );
   }
