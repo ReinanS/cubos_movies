@@ -4,13 +4,13 @@ import 'package:cubos_movies/errors/movie.error.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie_model.dart';
 import 'package:cubos_movies/model/movie_response_model.dart';
-import 'package:cubos_movies/repositories/genre_repository.dart';
+import 'package:cubos_movies/repositories/genres_repository_imp.dart';
 import 'package:cubos_movies/repositories/movie_repository.dart';
+import 'package:cubos_movies/service/dio_service_imp.dart';
 import 'package:dartz/dartz.dart';
 
 class MovieController {
   final _movieRepository = MovieRepository();
-  final _genreRespository = GenreRepository();
 
   MovieResponseModel? movieResponseModel;
   MovieError? movieError;
@@ -21,12 +21,6 @@ class MovieController {
   bool get hasMovies => moviesCount != 0;
   int get totalPages => movieResponseModel?.totalPages ?? 1;
   int get currentPage => movieResponseModel?.page ?? 1;
-
-  List<MovieGenre>? _genres;
-
-  List<MovieGenre> get genres => _genres ?? <MovieGenre>[];
-  int get genresCount => genres.length;
-  bool get hasGenres => genresCount != 0;
 
   Future<Either<MovieError, MovieResponseModel>> fetchAllMovies(
       {int page = 1}) async {
@@ -78,25 +72,6 @@ class MovieController {
         } else {
           movieResponseModel?.page = movie.page;
           movieResponseModel?.movies?.addAll(movie.movies!);
-        }
-      },
-    );
-
-    return result;
-  }
-
-  Future<Either<MovieError, List<MovieGenre>>> fetchAllGenres() async {
-    movieError = null;
-
-    final result = await _genreRespository.fetchAllGenres();
-
-    result.fold(
-      (error) => movieError = error,
-      (genres) {
-        if (_genres == null) {
-          _genres = genres;
-        } else {
-          _genres?.addAll(genres);
         }
       },
     );

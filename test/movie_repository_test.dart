@@ -26,7 +26,7 @@ void main() {
   });
 
   test('Should error to get all popular movies', () async {
-    final result = await _repository.fetchAllMovies(1000);
+    final result = await _repositoryImp.getMovies(1000);
     expect(result.isLeft(), true);
     expect(result.fold(id, id), isA<MovieError>());
   });
