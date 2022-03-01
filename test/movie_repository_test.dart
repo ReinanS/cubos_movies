@@ -5,17 +5,22 @@ import 'package:cubos_movies/model/movie_detail_model.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie_model.dart';
 import 'package:cubos_movies/model/movie_response_model.dart';
-import 'package:cubos_movies/repositories/genre_repository.dart';
+import 'package:cubos_movies/repositories/genres_repository_imp.dart';
 import 'package:cubos_movies/repositories/movie_repository.dart';
+import 'package:cubos_movies/repositories/movies_repository_imp.dart';
+import 'package:cubos_movies/service/dio_service.dart';
+import 'package:cubos_movies/service/dio_service_imp.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   final _repository = MovieRepository();
-  final _genreRepository = GenreRepository();
+  final _repositoryImp = MoviesRepositoryImp(DioServiceImp());
+
+  final _genreRepository = GenresRepositoryImp(DioServiceImp());
 
   test('Should get all popular movies', () async {
-    final result = await _repository.fetchAllMovies(1);
+    final result = await _repositoryImp.getMovies(1);
     expect(result.isRight(), true);
     expect(result.fold(id, id), isA<MovieResponseModel>());
   });
@@ -62,7 +67,8 @@ void main() {
   });
 
   test('Should get all Genres', () async {
-    final result = await _genreRepository.fetchAllGenres();
+    final result = await _genreRepository.getGenres();
     expect(result.isRight(), true);
+    expect(result.fold(id, id), isA<List<MovieGenre>>());
   });
 }
