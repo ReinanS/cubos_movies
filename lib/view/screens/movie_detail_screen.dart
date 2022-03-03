@@ -115,7 +115,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                         child: FadeInImage.memoryNetwork(
                           placeholder: kTransparentImage,
-                          image: API.requestImage(movie.backdropPath!),
+                          image: API.requestImage(movie.posterPath!),
                           fit: BoxFit.cover,
                         ),
                       ),
