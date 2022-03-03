@@ -32,11 +32,12 @@ class _MovieCardWidgetState extends State<MovieCardWidget> {
       onTap: () {
         // detalhar movie
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MovieDetailScreen(
-                      movieId: widget.movie.id!,
-                    )));
+          context,
+          MaterialPageRoute(
+            builder: (context) => MovieDetailScreen(movieId: widget.movie.id!),
+            fullscreenDialog: true,
+          ),
+        );
 
         log(widget.movie.id.toString());
       },
