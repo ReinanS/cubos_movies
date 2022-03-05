@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:cubos_movies/controllers/movie_controller.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
+import 'package:cubos_movies/repositories/movies/movies_repository_imp.dart';
+import 'package:cubos_movies/service/dio_service_imp.dart';
 import 'package:cubos_movies/widgets/movie_card_widget.dart';
 import 'package:cubos_movies/widgets/centered_message.dart';
 import 'package:cubos_movies/widgets/centered_progress.dart';
@@ -21,7 +23,7 @@ class GenreMovies extends StatefulWidget {
 }
 
 class _GenreMoviesState extends State<GenreMovies> {
-  final _controller = MovieController();
+  final _controller = MovieController(MoviesRepositoryImp(DioServiceImp()));
   final _scrollController = ScrollController();
   int lastPage = 1;
 
@@ -39,17 +41,20 @@ class _GenreMoviesState extends State<GenreMovies> {
 
   _initScrollListener() {
     _scrollController.addListener(() async {
-      if (_scrollController.offset >=
-          _scrollController.position.maxScrollExtent) {
-        if (_controller.currentPage == lastPage) {
-          lastPage++;
-          log(lastPage.toString());
-          await _controller.fetchMoviesByGenre(
-              page: lastPage, genre: widget.genreId);
-          setState(() {});
-        }
+      if (isInFinalPage()) {
+        lastPage++;
+        log(lastPage.toString());
+        await _controller.fetchMoviesByGenre(
+            page: lastPage, genre: widget.genreId);
+        setState(() {});
       }
     });
+  }
+
+  bool isInFinalPage() {
+    return (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent) &&
+        (_controller.currentPage == lastPage);
   }
 
   Future<void> _initialize() async {
