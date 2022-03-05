@@ -1,6 +1,7 @@
 import 'package:cubos_movies/controllers/genre_controller.dart';
 import 'package:cubos_movies/core/constant.dart';
-import 'package:cubos_movies/repositories/genres_repository_imp.dart';
+import 'package:cubos_movies/decorators/genres_cache_repository_decorator.dart';
+import 'package:cubos_movies/repositories/genres/genres_repository_imp.dart';
 import 'package:cubos_movies/service/dio_service_imp.dart';
 import 'package:cubos_movies/components/movie_page/genres_tab_widget.dart';
 import 'package:cubos_movies/widgets/centered_message.dart';
@@ -14,7 +15,11 @@ class MoviePage extends StatefulWidget {
 
 class _MoviePageState extends State<MoviePage> {
   final _controller = GenreController(
-    GenresRepositoryImp(DioServiceImp()),
+    GenresCacheRepositoryDecorator(
+      GenresRepositoryImp(
+        DioServiceImp(),
+      ),
+    ),
   );
 
   @override
