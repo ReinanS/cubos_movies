@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie_model.dart';
-import 'package:cubos_movies/view/screens/movie_search_screen.dart';
+import 'package:cubos_movies/pages/movie_search_page.dart';
 import 'package:cubos_movies/components/movie_page/genre_movies.dart';
 import 'package:cubos_movies/view/widgets/search_bar_container_widget.dart';
-import 'package:cubos_movies/view/widgets/search_bar_widget.dart';
 import 'package:cubos_movies/view/widgets/tab_bar_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +20,6 @@ class GenresTabWidget extends StatefulWidget {
 class _GenresTabWidgetState extends State<GenresTabWidget>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  String query = '';
   late List<MovieModel> movies;
 
   @override

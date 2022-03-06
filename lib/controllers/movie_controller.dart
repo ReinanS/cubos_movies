@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cubos_movies/errors/movie.error.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie_model.dart';
@@ -58,19 +60,19 @@ class MovieController {
   Future<Either<MovieError, MovieResponseModel>> fetchMovieByName(
       {int page = 1, required String query}) async {
     _movieError = null;
+    _loading = true;
     final result = await _movieRepository.getMoviesByname(page, query);
     result.fold(
-      (error) => _movieError = error,
+      (error) {
+        _movieError = error;
+      },
       (movie) {
-        if (movieResponseModel == null) {
-          _movieResponseModel = movie;
-        } else {
-          movieResponseModel?.page = movie.page;
-          movieResponseModel?.movies?.addAll(movie.movies!);
-        }
+        _movieResponseModel = movie;
+        movieResponseModel?.page = movie.page;
       },
     );
 
+    _loading = false;
     return result;
   }
 

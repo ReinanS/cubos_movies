@@ -1,5 +1,5 @@
 import 'package:cubos_movies/controllers/genre_controller.dart';
-import 'package:cubos_movies/core/constant.dart';
+import 'package:cubos_movies/core/app_constants.dart';
 import 'package:cubos_movies/decorators/genres_cache_repository_decorator.dart';
 import 'package:cubos_movies/repositories/genres/genres_repository_imp.dart';
 import 'package:cubos_movies/service/dio_service_imp.dart';
@@ -35,7 +35,7 @@ class _MoviePageState extends State<MoviePage> {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
-      title: Text(Constant.kAppName, style: TextStyle(color: Colors.black)),
+      title: Text(AppConstants.kAppName, style: TextStyle(color: Colors.black)),
     );
   }
 
