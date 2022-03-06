@@ -2,18 +2,27 @@ import 'package:cubos_movies/errors/movie.error.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/model/movie_model.dart';
 import 'package:cubos_movies/model/movie_response_model.dart';
-import 'package:cubos_movies/repositories/movies/movie_repository.dart';
 import 'package:cubos_movies/repositories/movies/movies_repository.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/widgets.dart';
 
 class MovieController {
   final MoviesRepository _movieRepository;
 
   MovieController(this._movieRepository);
 
-  MovieResponseModel? movieResponseModel;
-  MovieError? movieError;
-  bool loading = true;
+  final moviesResponseApi = ValueNotifier<MovieResponseModel?>(null);
+  final loadingApi = ValueNotifier<bool>(false);
+  final movieErrorApi = ValueNotifier<MovieError?>(null);
+
+  set _movieResponseModel(MovieResponseModel? movies) =>
+      moviesResponseApi.value = movies;
+  set _loading(bool bool) => loadingApi.value = bool;
+  set _movieError(MovieError? error) => movieErrorApi.value = error;
+
+  MovieResponseModel? get movieResponseModel => moviesResponseApi.value;
+  bool get loading => loadingApi.value;
+  MovieError? get movieError => movieErrorApi.value;
 
   List<MovieModel> get movies => movieResponseModel?.movies ?? <MovieModel>[];
   int get moviesCount => movies.length;
@@ -21,15 +30,21 @@ class MovieController {
   int get totalPages => movieResponseModel?.totalPages ?? 1;
   int get currentPage => movieResponseModel?.page ?? 1;
 
+  Future<void> initialize(int genre) async {
+    _loading = true;
+    await this.fetchMoviesByGenre(genre: genre);
+    _loading = false;
+  }
+
   Future<Either<MovieError, MovieResponseModel>> fetchMoviesByGenre(
       {int page = 1, required int genre}) async {
-    movieError = null;
+    _movieError = null;
     final result = await _movieRepository.getMovieByGenre(page, genre);
     result.fold(
-      (error) => movieError = error,
+      (error) => _movieError = error,
       (movie) {
         if (movieResponseModel == null) {
-          movieResponseModel = movie;
+          _movieResponseModel = movie;
         } else {
           movieResponseModel?.page = movie.page;
           movieResponseModel?.movies?.addAll(movie.movies!);
@@ -42,13 +57,13 @@ class MovieController {
 
   Future<Either<MovieError, MovieResponseModel>> fetchMovieByName(
       {int page = 1, required String query}) async {
-    movieError = null;
+    _movieError = null;
     final result = await _movieRepository.getMoviesByname(page, query);
     result.fold(
-      (error) => movieError = error,
+      (error) => _movieError = error,
       (movie) {
         if (movieResponseModel == null) {
-          movieResponseModel = movie;
+          _movieResponseModel = movie;
         } else {
           movieResponseModel?.page = movie.page;
           movieResponseModel?.movies?.addAll(movie.movies!);
