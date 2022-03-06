@@ -39,9 +39,9 @@ class _GenreMoviesState extends State<GenreMovies> {
     return _buildGenreMovies();
   }
 
-  _initScrollListener() {
+  void _initScrollListener() {
     _scrollController.addListener(() async {
-      if (isInFinalPage()) {
+      if (_isInFinalPage()) {
         lastPage++;
         log(lastPage.toString());
         await _controller.fetchMoviesByGenre(
@@ -51,33 +51,34 @@ class _GenreMoviesState extends State<GenreMovies> {
     });
   }
 
-  bool isInFinalPage() {
+  bool _isInFinalPage() {
     return (_scrollController.offset >=
             _scrollController.position.maxScrollExtent) &&
         (_controller.currentPage == lastPage);
   }
 
   Future<void> _initialize() async {
-    setState(() {
-      _controller.loading = true;
-    });
-
-    await _controller.fetchMoviesByGenre(genre: widget.genreId);
-
-    setState(() {
-      _controller.loading = false;
-    });
+    _controller.initialize(widget.genreId);
   }
 
   Widget _buildGenreMovies() {
-    if (_controller.loading) {
-      return CenteredProgress();
-    }
+    return AnimatedBuilder(
+      animation: Listenable.merge([
+        _controller.loadingApi,
+        _controller.movieErrorApi,
+        _controller.moviesResponseApi,
+      ]),
+      builder: (_, __) {
+        if (_controller.loading) {
+          return CenteredProgress();
+        }
 
-    if (_controller.movieError != null || !_controller.hasMovies) {
-      return CenteredMessage(message: _controller.movieError!.message!);
-    }
-    return _buildMovies();
+        if (_controller.movieError != null || !_controller.hasMovies) {
+          return CenteredMessage(message: _controller.movieError!.message!);
+        }
+        return _buildMovies();
+      },
+    );
   }
 
   Widget _buildMovies() {
