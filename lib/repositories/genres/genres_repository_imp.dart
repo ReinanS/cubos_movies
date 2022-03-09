@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:cubos_movies/core/api.dart';
+import 'package:cubos_movies/core/tmdb_api.dart';
 import 'package:cubos_movies/errors/movie.error.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/repositories/genres/genres_repository.dart';
