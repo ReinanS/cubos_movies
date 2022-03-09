@@ -12,53 +12,19 @@ Para realizar esse desafio você vai precisar:
 
 # Descrição do aplicativo
 
-O aplicativo deverá seguir o layout do figma no link : https://www.figma.com/file/p2vU5rmkSnulbxEqHjk5ah/Desafio-Flutter-Cubos?node-id=0%3A1. Caso tenha problema de acesso, entra em contato conosco.
-
-Será composto por duas telas: uma de listagem dos filmes e outra de detalhes do filme. 
-
-Deve ser possível filtrar os filmes por:
-
-- Nome (Campo de Texto)
-- Gênero do filme, separado em quatro tabs.
-
-# Critérios que serão avaliados
-
-O único critério **obrigátorio** para a entrega é o correto funcionamento do app de acordo com a **descrição**, mas lembre que você será avaliado. Segue alguns pontos de atenção:
-
-- Arquitetura Utilizada
-- Legibilidade do código
-- Gerenciamento de Estado
-- Injeção de dependência
-- Testes
-- Otimização
-- Uso do app Offline (cache)
-- Animações
-- GIT (padrões de commits , branchs)
-- Fidelidade do layout em relação ao Figma.
+O aplicativo deverá seguir o layout do figma no link : https://www.figma.com/file/p2vU5rmkSnulbxEqHjk5ah/Desafio-Flutter-Cubos?node-id=0%3A1.
 
 ## TO-DO list
 
-- [x] Arquitetura MVVM
+- [x] Arquitetura MVC
+- [x] SOLID
 - [x] Consumir os dados da API The Movie DB (https://developers.themoviedb.org/3/getting-started/introduction);
-- [x] HomeScreen
+- [x] Injeção de dependência
+- [x] Home Page
 - [x] Gênero do filme, separado em quatro tabs
-- [x] Detalhar Filme
+- [x] Detalhar Movie
 - [x] Buscar pelo nome do Filme
-
-## Melhorias
-
-- [x] Ao clicar na caixa de busca, ele abre uma nova página e nela o usuário busca o filme utilizando API Rest
-- [ ] Carregar cada página de filmes dinamicamente de acordo com o necessário
-- [ ] Adicionar Memória Cache
-- [x] Filtro de filmes por categoria utilizando API Rest
-- [x] Corrigir inconsistência ao abrir detalhar filme (alguns não estão carregando)
-- [ ] Adicionar Testes Unitários
-
-## Pontos a serem estudaos ou reforçados posteriormente:
-
-- Gerenciamento de Estado
-- Escolha da arquitetura apropriada
-- Uso do app Offline (cache)
-- Animações
-- Flutter Layout
-
+- [x] Uso do app Offline (cache)
+- [x] Fidelidade do layout em relação ao Figma.
+- [ ] Testes Unitários
+- [ ] Testes de Widgets
