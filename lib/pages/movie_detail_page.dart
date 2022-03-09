@@ -6,11 +6,12 @@ import 'package:cubos_movies/model/movie_detail_model.dart';
 import 'package:cubos_movies/repositories/movies/movies_repository_imp.dart';
 import 'package:cubos_movies/service/dio_service_imp.dart';
 import 'package:cubos_movies/utils/api.utils.dart';
-import 'package:cubos_movies/view/widgets/description_text.dart';
-import 'package:cubos_movies/view/widgets/genre_box.dart';
-import 'package:cubos_movies/view/widgets/info_box.dart';
+import 'package:cubos_movies/widgets/description_text.dart';
+import 'package:cubos_movies/widgets/genre_box.dart';
+import 'package:cubos_movies/widgets/info_box.dart';
 import 'package:cubos_movies/widgets/centered_message.dart';
 import 'package:cubos_movies/widgets/centered_progress.dart';
+import 'package:cubos_movies/widgets/description_text.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 

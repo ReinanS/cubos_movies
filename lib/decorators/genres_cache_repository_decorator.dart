@@ -32,7 +32,7 @@ class GenresCacheRepositoryDecorator extends GenresRepositoryDecorator {
     final prefs = await SharedPreferences.getInstance();
     String jsonGenres = jsonEncode(genres.map((g) => g.toJson()).toList());
     prefs.setString('genres_cache', jsonGenres);
-    print('Salvou no cache os gêneros: \n' + jsonGenres);
+    print('Salvou no cache os gêneros');
   }
 
   Future<List<MovieGenre>> _getInCache() async {
@@ -46,7 +46,7 @@ class GenresCacheRepositoryDecorator extends GenresRepositoryDecorator {
     List<MovieGenre> genresList =
         json.map((d) => MovieGenre.fromJson(d)).toList();
 
-    print('Recuperou do cache os gêneros ' + genresList.toString());
+    print('Recuperou do cache os gêneros ');
     return genresList;
   }
 }

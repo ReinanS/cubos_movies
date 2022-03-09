@@ -6,7 +6,7 @@ import 'package:cubos_movies/core/app_colors.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/repositories/movies/movies_repository_imp.dart';
 import 'package:cubos_movies/service/dio_service_imp.dart';
-import 'package:cubos_movies/view/widgets/search_bar_widget.dart';
+import 'package:cubos_movies/widgets/search_bar_widget.dart';
 import 'package:cubos_movies/widgets/movie_card_widget.dart';
 import 'package:cubos_movies/widgets/centered_message.dart';
 import 'package:cubos_movies/widgets/centered_progress.dart';

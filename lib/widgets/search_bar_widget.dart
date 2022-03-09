@@ -1,4 +1,4 @@
-import 'package:cubos_movies/view/utils/utils.dart';
+import 'package:cubos_movies/core/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class SearchBarWidget extends StatefulWidget {

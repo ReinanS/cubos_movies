@@ -1,4 +1,3 @@
-import 'package:cubos_movies/view/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class TabDecorationWidget extends StatelessWidget {

@@ -1,5 +1,5 @@
 import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
-import 'package:cubos_movies/view/widgets/tab_decoration_widget.dart';
+import 'package:cubos_movies/widgets/tab_decoration_widget.dart';
 import 'package:flutter/material.dart';
 
 class TabBarWidget extends StatelessWidget {

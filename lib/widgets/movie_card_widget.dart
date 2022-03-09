@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:cubos_movies/utils/api.utils.dart';
+import 'package:cubos_movies/core/tmdb_api.dart';
 import 'package:cubos_movies/model/movie_model.dart';
-import 'package:cubos_movies/view/screens/movie_detail_screen.dart';
+import 'package:cubos_movies/pages/movie_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -67,7 +67,7 @@ class _MovieCardWidgetState extends State<MovieCardWidget> {
                     child: FadeInImage.memoryNetwork(
                       placeholder: kTransparentImage,
                       image: widget.movie.posterPath != null
-                          ? API.requestImage(widget.movie.posterPath!)
+                          ? TmdbApi.requestImage(widget.movie.posterPath!)
                           : 'https://motivatevalmorgan.com/wp-content/uploads/2016/06/default-movie-768x1129.jpg',
                       fit: BoxFit.cover,
                     ),
