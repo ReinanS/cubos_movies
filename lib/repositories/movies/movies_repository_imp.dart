@@ -59,10 +59,9 @@ class MoviesRepositoryImp extends MoviesRepository {
       final response = await _dioService.getDio().get(url);
       final model = MovieResponseModel.fromMap(response.data);
       log('Status Code = ' + response.statusCode.toString());
-
       return Right(model);
     } on DioError catch (error) {
-      if (error.response!.statusCode! == 422) {
+      if (error.response?.statusCode == 422) {
         final response = error.response!.data['errors'] as List;
         return Left(MovieRepositoryError(response[0]));
       }

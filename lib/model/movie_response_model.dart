@@ -26,4 +26,15 @@ class MovieResponseModel {
         movies: List<MovieModel>.from(
             json["results"].map((x) => MovieModel.fromMap(x))),
       );
+
+  Map<String, dynamic> toMap() {
+    return {
+      'page': page,
+      'totalResults': totalResults,
+      'totalPages': totalPages,
+      'results': movies?.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  String toJson() => json.encode(toMap());
 }

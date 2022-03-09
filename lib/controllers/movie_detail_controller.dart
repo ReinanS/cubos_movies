@@ -27,7 +27,7 @@ class MovieDetailController {
   bool get loading => loadingApi.value;
   MovieError? get movieError => movieErrorApi.value;
 
-  void fetchMovieById(int id) async {
+  Future<void> fetchMovieById(int id) async {
     _movieError = null;
     _loading = true;
     final result = await _movieRepository.getMovieById(id);
@@ -39,7 +39,7 @@ class MovieDetailController {
     _loading = false;
   }
 
-  void fetchMovieCredits(int id) async {
+  Future<void> fetchMovieCredits(int id) async {
     _movieError = null;
     _loading = true;
     final result = await _movieRepository.getMovieCredits(id);

@@ -52,4 +52,25 @@ class MovieModel {
         overview: json["overview"],
         releaseDate: json["release_date"],
       );
+
+  Map<String, dynamic> toMap() {
+    return {
+      'popularity': popularity,
+      'vote_count': voteCount,
+      'video': video,
+      'poster_path': posterPath,
+      'id': id,
+      'adult': adult,
+      'backdrop_path': backdropPath,
+      'original_language': originalLanguage,
+      'original_title': originalTitle,
+      'genre_ids': genreIds,
+      'title': title,
+      'vote_average': voteAverage,
+      'overview': overview,
+      'release_date': releaseDate,
+    };
+  }
+
+  String toJson() => json.encode(toMap());
 }

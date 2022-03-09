@@ -1,3 +1,4 @@
+import 'package:cubos_movies/components/details_page/hero_poster_components.dart';
 import 'package:cubos_movies/controllers/movie_detail_controller.dart';
 import 'package:cubos_movies/core/app_colors.dart';
 import 'package:cubos_movies/core/app_constants.dart';
@@ -5,15 +6,12 @@ import 'package:cubos_movies/model/%20movie_credits.dart';
 import 'package:cubos_movies/model/movie_detail_model.dart';
 import 'package:cubos_movies/repositories/movies/movies_repository_imp.dart';
 import 'package:cubos_movies/service/dio_service_imp.dart';
-import 'package:cubos_movies/utils/api.utils.dart';
 import 'package:cubos_movies/widgets/description_text.dart';
 import 'package:cubos_movies/widgets/genre_box.dart';
 import 'package:cubos_movies/widgets/info_box.dart';
 import 'package:cubos_movies/widgets/centered_message.dart';
 import 'package:cubos_movies/widgets/centered_progress.dart';
-import 'package:cubos_movies/widgets/description_text.dart';
 import 'package:flutter/material.dart';
-import 'package:transparent_image/transparent_image.dart';
 
 class MovieDetailScreen extends StatefulWidget {
   final int movieId;
@@ -41,24 +39,16 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: _background(
-        child: _body(),
-      ),
+      body: _buildBody(),
     );
   }
 
   Future<void> _initialize() async {
-    _controller.fetchMovieById(widget.movieId);
-    _controller.fetchMovieCredits(widget.movieId);
+    await _controller.fetchMovieById(widget.movieId);
+    await _controller.fetchMovieCredits(widget.movieId);
   }
 
-  Widget _body() {
-    return Container(
-      child: Text(widget.movieId.toString()),
-    );
-  }
-
-  Widget _background({required Widget child}) {
+  Widget _buildBody() {
     return AnimatedBuilder(
       animation: Listenable.merge([
         _controller.movieResponseApi,
@@ -105,90 +95,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   alignment: Alignment.topLeft,
                   child: BackButton(),
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 25),
-                  width: double.infinity,
-                  height: deviceSize.height * 0.7,
-                  child: Center(
-                    child: Hero(
-                      tag: widget.movieId,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(16)),
-                        child: FadeInImage.memoryNetwork(
-                          placeholder: kTransparentImage,
-                          image: API.requestImage(movie.posterPath!),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(bottom: deviceSize.height * 0.05),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            movie.voteAverage.toString(),
-                            style: TextStyle(
-                              color: AppColors.darkBlue,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 28,
-                            ),
-                          ),
-                          Text(
-                            ' / 10',
-                            style: TextStyle(
-                              color: AppColors.mediumGrey,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.only(bottom: deviceSize.height * 0.04),
-                  child: Text(
-                    movie.title!.toUpperCase(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: AppColors.textDark),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(bottom: deviceSize.height * 0.06),
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "Titulo original: ",
-                          style: TextStyle(
-                            color: AppColors.basicGrey,
-                            fontSize: 14,
-                          ),
-                        ),
-                        TextSpan(
-                          text: movie.originalTitle,
-                          style: TextStyle(
-                            color: AppColors.blackGrey,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                HeroPosterComponents(
+                    deviceSize: deviceSize, widget: widget, movie: movie),
+                _buildVotesMovie(deviceSize, movie),
+                _buildMovieTitle(deviceSize, movie),
+                _buildOriginalTitle(deviceSize, movie),
                 Container(
                   margin: EdgeInsets.only(bottom: deviceSize.height * 0.03),
                   child: Row(
@@ -207,22 +118,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     ],
                   ),
                 ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: deviceSize.height * 0.05),
-                    child: Row(
-                      children: movie.genres!
-                          .map((g) => Container(
-                                margin: EdgeInsets.only(right: 15),
-                                child: GenreBox(
-                                  text: g.name!,
-                                ),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                ),
+                _buildMovieGenres(deviceSize, movie),
                 Container(
                   margin: EdgeInsets.only(bottom: deviceSize.height * 0.03),
                   child: DescriptionText(
@@ -266,6 +162,101 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  SingleChildScrollView _buildMovieGenres(
+      Size deviceSize, MovieDetailModel movie) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        margin: EdgeInsets.only(bottom: deviceSize.height * 0.05),
+        child: Row(
+          children: movie.genres!
+              .map((g) => Container(
+                    margin: EdgeInsets.only(right: 15),
+                    child: GenreBox(
+                      text: g.name!,
+                    ),
+                  ))
+              .toList(),
+        ),
+      ),
+    );
+  }
+
+  Container _buildOriginalTitle(Size deviceSize, MovieDetailModel movie) {
+    return Container(
+      margin: EdgeInsets.only(bottom: deviceSize.height * 0.06),
+      child: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: "Original Title: ",
+              style: TextStyle(
+                color: AppColors.basicGrey,
+                fontSize: 14,
+              ),
+            ),
+            TextSpan(
+              text: movie.originalTitle,
+              style: TextStyle(
+                color: AppColors.blackGrey,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Container _buildMovieTitle(Size deviceSize, MovieDetailModel movie) {
+    return Container(
+      margin: EdgeInsets.only(bottom: deviceSize.height * 0.04),
+      child: Text(
+        movie.title!.toUpperCase(),
+        style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            color: AppColors.textDark),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Column _buildVotesMovie(Size deviceSize, MovieDetailModel movie) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.only(bottom: deviceSize.height * 0.05),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                movie.voteAverage.toString(),
+                style: TextStyle(
+                  color: AppColors.darkBlue,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 28,
+                ),
+              ),
+              Text(
+                ' / 10',
+                style: TextStyle(
+                  color: AppColors.mediumGrey,
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

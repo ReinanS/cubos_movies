@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cubos_movies/controllers/movie_controller.dart';
+import 'package:cubos_movies/decorators/movies_cache_repository_decorator.dart';
 import 'package:cubos_movies/model/movie_genre.dart';
 import 'package:cubos_movies/repositories/movies/movies_repository_imp.dart';
 import 'package:cubos_movies/service/dio_service_imp.dart';
@@ -23,7 +24,14 @@ class GenreMovies extends StatefulWidget {
 }
 
 class _GenreMoviesState extends State<GenreMovies> {
-  final _controller = MovieController(MoviesRepositoryImp(DioServiceImp()));
+  final _controller = MovieController(
+    MoviesCacheRepositoryDecorator(
+      MoviesRepositoryImp(
+        DioServiceImp(),
+      ),
+    ),
+  );
+
   final _scrollController = ScrollController();
   int lastPage = 1;
 
