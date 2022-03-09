@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
 class TmdbApi {
-  static final String imageBase =
-      'https://image.tmdb.org/t/p/w220_and_h330_face';
+  static String requestImage(String img) =>
+      'https://image.tmdb.org/t/p/w500/$img';
 
   static final kBaseUrl = 'https://api.themoviedb.org/3';
   static final kApiKey =
