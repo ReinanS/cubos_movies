@@ -16,4 +16,16 @@ class MovieGenre {
         id: json["id"],
         name: json["name"],
       );
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+    };
+  }
+
+  String toJson() => json.encode(toMap());
+
+  @override
+  String toString() => 'MovieGenre(id: $id, name: $name)';
 }

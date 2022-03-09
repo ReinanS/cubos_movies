@@ -1,4 +1,4 @@
-import 'package:cubos_movies/core/api.dart';
+import 'package:cubos_movies/core/tmdb_api.dart';
 import 'package:flutter/material.dart';
 
 class MovieCard extends StatelessWidget {
@@ -18,7 +18,7 @@ class MovieCard extends StatelessWidget {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: NetworkImage(
-              TmdbApi.imageBase + posterPath,
+              TmdbApi.requestImage(posterPath),
             ),
             fit: BoxFit.cover,
           ),

@@ -1,13 +1,12 @@
-import 'dart:developer';
-
-import 'package:cubos_movies/core/constant.dart';
-import 'package:cubos_movies/view/widgets/genres_tab_widget.dart';
-import 'package:cubos_movies/view/widgets/movie_card_widget.dart';
+import 'package:cubos_movies/controllers/genre_controller.dart';
+import 'package:cubos_movies/core/app_constants.dart';
+import 'package:cubos_movies/decorators/genres_cache_repository_decorator.dart';
+import 'package:cubos_movies/repositories/genres/genres_repository_imp.dart';
+import 'package:cubos_movies/service/dio_service_imp.dart';
+import 'package:cubos_movies/components/movie_page/genres_tab_widget.dart';
+import 'package:cubos_movies/widgets/centered_message.dart';
 import 'package:flutter/material.dart';
-import '../widgets/centered_message.dart';
 import '../widgets/centered_progress.dart';
-import '../widgets/movie_card.dart';
-import '../controllers/movie_controller.dart';
 
 class MoviePage extends StatefulWidget {
   @override
@@ -15,13 +14,13 @@ class MoviePage extends StatefulWidget {
 }
 
 class _MoviePageState extends State<MoviePage> {
-  final _controller = MovieController();
-
-  @override
-  void initState() {
-    super.initState();
-    _initialize();
-  }
+  final _controller = GenreController(
+    GenresCacheRepositoryDecorator(
+      GenresRepositoryImp(
+        DioServiceImp(),
+      ),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -32,35 +31,32 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 
-  Future<void> _initialize() async {
-    setState(() {
-      _controller.loading = true;
-    });
-
-    await _controller.fetchAllGenres();
-
-    setState(() {
-      _controller.loading = false;
-    });
-  }
-
   _buildAppBar() {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
-      title: Text(Constant.kAppName, style: TextStyle(color: Colors.black)),
+      title: Text(AppConstants.kAppName, style: TextStyle(color: Colors.black)),
     );
   }
 
   Widget _buildMovieList() {
-    if (_controller.loading) {
-      return CenteredProgress();
-    }
+    return AnimatedBuilder(
+      animation: Listenable.merge([
+        _controller.loading,
+        _controller.movieErrorApi,
+        _controller.genresApi,
+      ]),
+      builder: (_, __) {
+        if (_controller.loading.value) {
+          return CenteredProgress();
+        }
 
-    if (_controller.movieError != null || !_controller.hasGenres) {
-      return CenteredMessage(message: _controller.movieError!.message!);
-    }
+        if (_controller.movieError != null || !_controller.hasGenres) {
+          return CenteredMessage(message: _controller.movieError!.message!);
+        }
 
-    return GenresTabWidget(genres: _controller.genres);
+        return GenresTabWidget(genres: _controller.genres);
+      },
+    );
   }
 }
