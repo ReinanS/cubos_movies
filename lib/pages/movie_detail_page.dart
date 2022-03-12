@@ -107,11 +107,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       InfoBox(
-                        leadingText: 'Ano:',
+                        leadingText: 'Year:',
                         text: movie.releaseDate!.year.toString(),
                       ),
                       InfoBox(
-                        leadingText: 'Duração:',
+                        leadingText: 'Duration:',
                         text: _controller.getDuration(movie.runtime!),
                         // text: movie.duration,
                       ),
@@ -122,13 +122,13 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 Container(
                   margin: EdgeInsets.only(bottom: deviceSize.height * 0.03),
                   child: DescriptionText(
-                      title: 'Descrição', text: movie.overview!),
+                      title: 'Description', text: movie.overview!),
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: deviceSize.height * 0.02),
                   width: deviceSize.width,
                   child: InfoBox(
-                    leadingText: 'ORÇAMENTO:',
+                    leadingText: 'BUDGET:',
                     text:
                         '\$' + AppConstants.currencyFormat.format(movie.budget),
                   ),
@@ -137,7 +137,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   margin: EdgeInsets.only(bottom: deviceSize.height * 0.05),
                   width: deviceSize.width,
                   child: InfoBox(
-                    leadingText: 'PRODUTORAS:',
+                    leadingText: 'PRODUCERS:',
                     text: _controller.getListString(
                         _controller.getCompanyName(movie.productionCompanies!)),
                   ),
@@ -145,14 +145,14 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 Container(
                   margin: EdgeInsets.only(bottom: deviceSize.height * 0.05),
                   child: DescriptionText(
-                    title: 'DIRETOR',
+                    title: 'DIRECTOR',
                     text: _controller.getListString(
                         _controller.getDirectorName(credits.crew)),
                   ),
                 ),
                 Container(
                   child: DescriptionText(
-                    title: 'ELENCO',
+                    title: 'CAST',
                     text: _controller
                         .getListString(_controller.getCastName(credits.cast)),
                   ),

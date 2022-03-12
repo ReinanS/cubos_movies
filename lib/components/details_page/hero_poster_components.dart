@@ -1,6 +1,6 @@
 import 'package:cubos_movies/model/movie_detail_model.dart';
 import 'package:cubos_movies/pages/movie_detail_page.dart';
-import 'package:cubos_movies/utils/api.utils.dart';
+import 'package:cubos_movies/core/utils/api.utils.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
