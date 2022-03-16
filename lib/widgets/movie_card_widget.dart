@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:cubos_movies/core/tmdb_api.dart';
-import 'package:cubos_movies/model/movie_model.dart';
+import 'package:cubos_movies/models/movie_model.dart';
 import 'package:cubos_movies/pages/movie_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';

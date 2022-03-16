@@ -2,8 +2,8 @@ import 'package:cubos_movies/components/details_page/hero_poster_components.dart
 import 'package:cubos_movies/controllers/movie_detail_controller.dart';
 import 'package:cubos_movies/core/app_colors.dart';
 import 'package:cubos_movies/core/app_constants.dart';
-import 'package:cubos_movies/model/%20movie_credits.dart';
-import 'package:cubos_movies/model/movie_detail_model.dart';
+import 'package:cubos_movies/models/movie_credits.dart';
+import 'package:cubos_movies/models/movie_detail_model.dart';
 import 'package:cubos_movies/repositories/movies/movies_repository_imp.dart';
 import 'package:cubos_movies/service/dio_service_imp.dart';
 import 'package:cubos_movies/widgets/description_text.dart';

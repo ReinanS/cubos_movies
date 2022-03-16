@@ -1,5 +1,5 @@
-import 'package:cubos_movies/model/movie_genre.dart';
-import 'package:cubos_movies/model/movie_model.dart';
+import 'package:cubos_movies/models/movie_genre.dart';
+import 'package:cubos_movies/models/movie_model.dart';
 import 'package:cubos_movies/pages/movie_search_page.dart';
 import 'package:cubos_movies/components/movie_page/genre_movies.dart';
 import 'package:cubos_movies/widgets/search_bar_container_widget.dart';

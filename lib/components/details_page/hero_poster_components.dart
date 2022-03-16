@@ -1,4 +1,4 @@
-import 'package:cubos_movies/model/movie_detail_model.dart';
+import 'package:cubos_movies/models/movie_detail_model.dart';
 import 'package:cubos_movies/pages/movie_detail_page.dart';
 import 'package:cubos_movies/core/utils/api.utils.dart';
 import 'package:flutter/material.dart';

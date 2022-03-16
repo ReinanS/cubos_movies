@@ -1,4 +1,4 @@
-import 'package:cubos_movies/model/movie_genre.dart';
+import 'package:cubos_movies/models/movie_genre.dart';
 import 'package:cubos_movies/repositories/genres/genres_repository.dart';
 import 'package:cubos_movies/repositories/genres/genres_repository_imp.dart';
 import 'package:cubos_movies/service/dio_service.dart';

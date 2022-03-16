@@ -1,7 +1,7 @@
-import 'package:cubos_movies/errors/movie.error.dart';
-import 'package:cubos_movies/model/%20movie_credits.dart';
-import 'package:cubos_movies/model/movie_detail_model.dart';
-import 'package:cubos_movies/model/movie_response_model.dart';
+import 'package:cubos_movies/core/errors/movie.error.dart';
+import 'package:cubos_movies/models/movie_credits.dart';
+import 'package:cubos_movies/models/movie_detail_model.dart';
+import 'package:cubos_movies/models/movie_response_model.dart';
 import 'package:cubos_movies/repositories/movies/movies_repository.dart';
 import 'package:cubos_movies/repositories/movies/movies_repository_imp.dart';
 import 'package:cubos_movies/service/dio_service.dart';

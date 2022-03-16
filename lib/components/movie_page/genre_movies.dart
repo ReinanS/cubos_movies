@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:cubos_movies/controllers/movie_controller.dart';
 import 'package:cubos_movies/decorators/movies_cache_repository_decorator.dart';
-import 'package:cubos_movies/model/movie_genre.dart';
+import 'package:cubos_movies/models/movie_genre.dart';
 import 'package:cubos_movies/repositories/movies/movies_repository_imp.dart';
 import 'package:cubos_movies/service/dio_service_imp.dart';
 import 'package:cubos_movies/widgets/movie_card_widget.dart';

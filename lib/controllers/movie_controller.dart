@@ -1,9 +1,7 @@
-import 'dart:developer';
-
-import 'package:cubos_movies/errors/movie.error.dart';
-import 'package:cubos_movies/model/movie_genre.dart';
-import 'package:cubos_movies/model/movie_model.dart';
-import 'package:cubos_movies/model/movie_response_model.dart';
+import 'package:cubos_movies/core/errors/movie.error.dart';
+import 'package:cubos_movies/models/movie_genre.dart';
+import 'package:cubos_movies/models/movie_model.dart';
+import 'package:cubos_movies/models/movie_response_model.dart';
 import 'package:cubos_movies/repositories/movies/movies_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/widgets.dart';
